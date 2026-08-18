@@ -59,22 +59,22 @@ export default function Hero() {
           </div>
 
           <dl
-            className="hero-enter mt-6 flex flex-wrap gap-x-10 gap-y-3 border-t border-line pt-4"
+            className="hero-enter mt-6 grid grid-cols-3 gap-4 border-t border-line pt-4"
             style={{ '--hero-delay': '480ms' }}
           >
-            <div>
+            <div className="whitespace-nowrap">
               <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-mist">
                 Pages
               </dt>
               <dd className="mt-1 font-display text-2xl text-ink">{book.pages}</dd>
             </div>
-            <div>
+            <div className="whitespace-nowrap">
               <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-mist">
                 Format
               </dt>
               <dd className="mt-1 font-display text-2xl text-ink">Paperback</dd>
             </div>
-            <div>
+            <div className="whitespace-nowrap">
               <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-mist">
                 Status
               </dt>
