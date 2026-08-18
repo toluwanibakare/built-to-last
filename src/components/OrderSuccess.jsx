@@ -11,7 +11,9 @@ function Row({ label, value }) {
 }
 
 export default function OrderSuccess({ order, onContinue }) {
-  const deliveryNote = order.customer.country === 'Nigeria' ? 'Nigeria' : order.customer.country
+  const deliveryNote = order.edition === 'Soft Copy (E-book)' 
+    ? `email (${order.customer.email})` 
+    : `${order.customer.state}, Nigeria`
 
   return (
     <main className="flex min-h-screen items-center justify-center px-5 py-24">
@@ -30,14 +32,15 @@ export default function OrderSuccess({ order, onContinue }) {
             Thank you, {order.customer.name.split(' ')[0]}
           </h1>
           <p className="mt-4 leading-relaxed text-slate">
-            Your pre-order for <strong className="font-medium text-ink">{config.order.bookTitle}</strong>{' '}
+            Your pre-order for <strong className="font-medium text-ink">Built to Last</strong>{' '}
             has been received. A confirmation has been sent to{' '}
             <strong className="font-medium text-ink">{order.customer.email}</strong>.
           </p>
 
           <dl className="mt-10 space-y-3 text-left rounded-2xl bg-cream p-6 md:p-8">
             <Row label="Order number" value={order.reference} />
-            <Row label="Book" value={config.order.bookTitle} />
+            <Row label="Book" value="Built to Last" />
+            <Row label="Edition" value={order.edition} />
             <Row label="Quantity" value={`${order.quantity} copy${order.quantity > 1 ? 's' : ''}`} />
             <Row
               label="Total paid"
@@ -45,7 +48,7 @@ export default function OrderSuccess({ order, onContinue }) {
             />
             <Row label="Payment reference" value={order.paymentReference} />
             <Row label="Delivery to" value={deliveryNote} />
-            <Row label="Order status" value="Processing" />
+            <Row label="Order status" value="Successful" />
           </dl>
 
           <div className="mt-8 rounded-2xl border border-line p-6">

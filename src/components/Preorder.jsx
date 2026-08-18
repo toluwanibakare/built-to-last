@@ -113,7 +113,7 @@ export default function Preorder({ onOrderConfirmed }) {
             ...order,
             paymentReference: data.reference || order.reference,
             paymentStatus: 'paid',
-            status: 'processing',
+            status: 'successful',
           })
         },
         onFailed: () => {
