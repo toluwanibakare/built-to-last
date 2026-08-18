@@ -15,7 +15,7 @@ export const config = {
     priceLabel: env.VITE_PRICE_LABEL || '₦6,500',
   },
   korapay: {
-    publicKey: env.VITE_KORAPAY_PUBLIC_KEY || 'pk_test_placeholder',
+    publicKey: env.VITE_KORAPAY_PUBLIC_KEY || 'pk_test_xRzLDXmeuiQMaiyF5oXuvT4iSsXJN8friVqFkweh',
     scriptUrl:
       'https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js',
   },
