@@ -1,27 +1,23 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { SectionHeading } from './ui/SectionHeading'
 import { Reveal } from './ui/Reveal'
 import { Field } from './ui/Field'
 import { Button } from './ui/Button'
-import { Accordion } from './ui/Accordion'
 import { book } from '../data/book'
 import { config } from '../config'
 import { initializeCheckout } from '../lib/korapay'
 import { buildOrder, createOrder, verifyPayment } from '../lib/orders'
 
-const COUNTRIES = [
-  'Nigeria',
-  'United States',
-  'United Kingdom',
-  'Canada',
-  'Ghana',
-  'Kenya',
-  'South Africa',
-  'Other',
+const NIGERIA_STATES = [
+  'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue',
+  'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
+  'FCT (Abuja)', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina',
+  'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo',
+  'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
 ]
 
-function formatMoney(amount, currency) {
-  return new Intl.NumberFormat('en-NG', { style: 'currency', currency }).format(amount)
+function formatMoney(amount) {
+  return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount)
 }
 
 export default function Preorder({ onOrderConfirmed }) {
@@ -31,13 +27,19 @@ export default function Preorder({ onOrderConfirmed }) {
     email: '',
     whatsapp: '',
     country: 'Nigeria',
-    state: 'Lagos',
+    state: 'Abia',
     address: '',
     quantity: '1',
   })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
+
+  const PRICING = {
+    hard: { regular: 7000, preorder: 6500 },
+    soft: { regular: 6000, preorder: 5500 },
+  }
+  const currentPricing = PRICING[edition]
 
   const setField = (name) => (e) => {
     setForm((f) => ({ ...f, [name]: e.target.value }))
@@ -67,8 +69,8 @@ export default function Preorder({ onOrderConfirmed }) {
     setStatus('creating')
     try {
       const quantity = parseInt(form.quantity, 10)
-      const order = {
-        reference: 'PRE-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+      const totalAmount = currentPricing.preorder * quantity
+      const order = buildOrder({
         customer: {
           name: form.name.trim(),
           email: form.email.trim(),
@@ -78,20 +80,56 @@ export default function Preorder({ onOrderConfirmed }) {
           address: edition === 'hard' ? form.address.trim() : 'N/A',
         },
         quantity,
-        total: 0,
-        currency: 'NGN',
-        paymentReference: 'PRE-ORDER-WAITLIST',
-        paymentStatus: 'pending',
-        status: 'processing',
-        edition: edition === 'hard' ? 'Hard Copy (Paperback)' : 'Soft Copy (E-book)',
-      }
+      })
+      
+      order.total = totalAmount
+      order.edition = edition === 'hard' ? 'Hard Copy (Paperback)' : 'Soft Copy (E-book)'
 
-      // High-end feel loading delay
-      await new Promise((resolve) => setTimeout(resolve, 800))
-      onOrderConfirmed(order)
+      await createOrder({
+        reference: order.reference,
+        customer: order.customer,
+        quantity,
+        amount: order.total,
+        currency: order.currency,
+      })
+
+      setStatus('paying')
+      initializeCheckout({
+        reference: order.reference,
+        amount: order.total,
+        currency: order.currency,
+        customer: { name: order.customer.name, email: order.customer.email },
+        narration: `Pre-order: ${config.order.bookTitle} (${quantity} copy${quantity > 1 ? 's' : ''})`,
+        metadata: { orderId: order.reference, qty: String(quantity), edition: order.edition },
+        onSuccess: async (data) => {
+          try {
+            await verifyPayment({ reference: data.reference || order.reference, orderId: order.reference })
+          } catch {
+            setStatus('idle')
+            setMessage('Payment was received, but we could not confirm it automatically. Please contact us with your order number.')
+            return
+          }
+          onOrderConfirmed({
+            ...order,
+            paymentReference: data.reference || order.reference,
+            paymentStatus: 'paid',
+            status: 'processing',
+          })
+        },
+        onFailed: () => {
+          setStatus('idle')
+          setMessage('The payment did not go through. Please try again.')
+        },
+        onClose: () => {
+          setStatus((current) => (current === 'paying' ? 'idle' : current))
+        },
+        onPending: () => {
+          setMessage('Your bank transfer is being confirmed. We will confirm your order once it clears.')
+        },
+      })
     } catch {
       setStatus('idle')
-      setMessage('Something went wrong. Please try again.')
+      setMessage('Something went wrong while starting your payment. Please try again.')
     }
   }
 
@@ -114,15 +152,19 @@ export default function Preorder({ onOrderConfirmed }) {
                 </div>
                 <div className="flex items-baseline justify-between gap-6">
                   <dt className="text-mist">Price per copy</dt>
-                  <dd className="font-medium text-ink">To be announced</dd>
+                  <dd className="flex items-baseline gap-2">
+                    <span className="line-through text-mist text-sm">{formatMoney(currentPricing.regular)}</span>
+                    <span className="font-display text-lg font-semibold text-brass">{formatMoney(currentPricing.preorder)}</span>
+                    <span className="text-xs text-brass/80 font-medium">Pre-order</span>
+                  </dd>
                 </div>
                 <div className="flex items-baseline justify-between gap-6">
                   <dt className="text-mist">Format</dt>
-                  <dd className="font-medium text-ink">Paperback & E-book editions</dd>
+                  <dd className="font-medium text-ink">Paperback &amp; E-book editions</dd>
                 </div>
-                <div className="flex items-baseline justify-between gap-6">
-                  <dt className="text-mist">Shipping</dt>
-                  <dd className="text-right text-ink">Details announced at launch</dd>
+                <div className="flex items-start justify-between gap-6">
+                  <dt className="text-mist">Delivery</dt>
+                  <dd className="text-right text-ink text-sm">Buyer bears delivery cost. Details shared at launch.</dd>
                 </div>
               </dl>
 
@@ -227,8 +269,9 @@ export default function Preorder({ onOrderConfirmed }) {
                       error={errors.state}
                       required
                     >
-                      <option value="Lagos">Lagos</option>
-                      <option value="Port Harcourt">Port Harcourt</option>
+                      {NIGERIA_STATES.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
                     </Field>
                     <Field
                       id="order-address"
@@ -243,25 +286,52 @@ export default function Preorder({ onOrderConfirmed }) {
                   </>
                 )}
 
-                <Field
-                  id="order-quantity"
-                  type="number"
-                  label="Quantity"
-                  min="1"
-                  max="20"
-                  value={form.quantity}
-                  onChange={setField('quantity')}
-                  error={errors.quantity}
-                  hint="How many copies would you like?"
-                  className="md:col-span-2 md:max-w-[12rem]"
-                />
+                <div className="md:col-span-2 md:max-w-[12rem] flex flex-col gap-2">
+                  <label htmlFor="order-quantity" className="text-sm font-medium text-ink-soft">
+                    Quantity
+                    <span className="text-brass-deep" aria-hidden="true"> *</span>
+                  </label>
+                  <div className="flex items-center rounded-lg border border-line bg-cream">
+                    <button
+                      type="button"
+                      onClick={() => setForm(f => ({ ...f, quantity: Math.max(1, parseInt(f.quantity || 1, 10) - 1).toString() }))}
+                      className="px-4 py-3 text-ink-soft hover:text-ink hover:bg-line/30 transition-colors"
+                      aria-label="Decrease quantity"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 8h10" strokeLinecap="round"/></svg>
+                    </button>
+                    <input
+                      id="order-quantity"
+                      type="number"
+                      min="1"
+                      max="20"
+                      value={form.quantity}
+                      onChange={setField('quantity')}
+                      className="w-full bg-transparent px-2 py-3 text-center text-base text-ink focus:outline-none appearance-none"
+                      style={{ MozAppearance: 'textfield' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm(f => ({ ...f, quantity: Math.min(20, parseInt(f.quantity || 1, 10) + 1).toString() }))}
+                      className="px-4 py-3 text-ink-soft hover:text-ink hover:bg-line/30 transition-colors"
+                      aria-label="Increase quantity"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 3v10M3 8h10" strokeLinecap="round"/></svg>
+                    </button>
+                  </div>
+                  {errors.quantity ? (
+                    <p className="text-sm text-red-600" role="alert">{errors.quantity}</p>
+                  ) : (
+                    <p className="text-sm text-mist">How many copies would you like?</p>
+                  )}
+                </div>
               </div>
 
               <div className="mt-8 flex flex-col gap-4 border-t border-line pt-7">
                 <div className="flex items-baseline justify-between">
                   <span className="text-sm text-mist">Total ({form.quantity || 1} copy)</span>
                   <span className="font-display text-2xl text-ink">
-                    To be announced
+                    {formatMoney(currentPricing.preorder * Math.max(1, parseInt(form.quantity || 1, 10)))}
                   </span>
                 </div>
 
@@ -273,14 +343,15 @@ export default function Preorder({ onOrderConfirmed }) {
 
                 <Button
                   type="submit"
-                  loading={status === 'creating'}
+                  loading={status === 'creating' || status === 'paying'}
+                  disabled={status === 'paying'}
                   className="w-full"
                 >
-                  Join the Pre-order Waitlist
+                  Pre-order Your Copy
                 </Button>
 
                 <p className="text-center text-xs leading-relaxed text-mist">
-                  Pricing will be announced soon. Joining the waitlist reserves your place, and you will receive a notification with order details at launch.
+                  Payments are processed securely by Korapay. You will receive an order confirmation after payment.
                 </p>
               </div>
             </form>

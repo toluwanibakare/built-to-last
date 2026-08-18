@@ -9,9 +9,10 @@ export const config = {
   order: {
     bookTitle: 'Built to Last: Discovering God’s Pattern for Marriage That Endures',
     currency: env.VITE_CURRENCY || 'NGN',
-    price: Number(env.VITE_BOOK_PRICE || 0),
+    regularPrice: 7000,
+    price: Number(env.VITE_BOOK_PRICE || 6500),
     shippingCost: Number(env.VITE_SHIPPING_COST || 0),
-    priceLabel: env.VITE_PRICE_LABEL || 'To be announced',
+    priceLabel: env.VITE_PRICE_LABEL || '₦6,500',
   },
   korapay: {
     publicKey: env.VITE_KORAPAY_PUBLIC_KEY || 'pk_test_placeholder',
