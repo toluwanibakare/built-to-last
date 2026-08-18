@@ -87,7 +87,7 @@ export default function Nav() {
         <div className="flex items-center gap-3">
           <Button
             href="#pre-order"
-            className="hidden px-5 py-2.5 text-sm lg:inline-flex"
+            className="!hidden lg:!inline-flex px-5 py-2.5 text-sm"
             onClick={() => setOpen(false)}
           >
             Pre-order
