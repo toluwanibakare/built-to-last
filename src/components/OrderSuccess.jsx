@@ -32,7 +32,7 @@ export default function OrderSuccess({ order, onContinue }) {
             Thank you, {order.customer.name.split(' ')[0]}
           </h1>
           <p className="mt-4 leading-relaxed text-slate">
-            Your pre-order for <strong className="font-medium text-ink">Built to Last</strong>{' '}
+            Thank you so much for trusting us. Your pre-order for <strong className="font-medium text-ink">Built to Last</strong>{' '}
             has been received. A confirmation has been sent to{' '}
             <strong className="font-medium text-ink">{order.customer.email}</strong>.
           </p>
@@ -56,8 +56,7 @@ export default function OrderSuccess({ order, onContinue }) {
               What happens next
             </p>
             <p className="mt-3 text-sm leading-relaxed text-slate">
-              Your order is now being processed. You will receive delivery and shipping details
-              by email once the book is ready to be dispatched at launch.
+              You will be the first to know when the book is available, and more details will be sent to your email periodically with updates on the book.
             </p>
           </div>
 

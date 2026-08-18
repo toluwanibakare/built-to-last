@@ -168,14 +168,14 @@ export default function Preorder({ onOrderConfirmed }) {
                   <dt className="text-mist">Delivery</dt>
                   <dd className="text-right text-ink text-sm">
                     {edition === 'hard'
-                      ? 'Buyer bears delivery cost. Details shared at launch.'
+                      ? 'Available to any part of Nigeria. Customer pays delivery cost when the book launches.'
                       : 'E-book will be sent to your registered email address.'}
                   </dd>
                 </div>
               </dl>
 
               <p className="text-sm leading-relaxed text-mist">
-                The paperback edition will be shipped directly at launch. The soft copy (e-book) will be sent to your registered email address.
+                The paperback edition will be delivered to any part of Nigeria when the book launches, with delivery costs borne by the customer. The soft copy (e-book) will be sent to your registered email address.
               </p>
             </Reveal>
           </div>
