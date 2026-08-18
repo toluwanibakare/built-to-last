@@ -84,7 +84,7 @@ export default function Hero() {
         </div>
 
         <div className="hero-enter relative mx-auto w-full max-w-md lg:max-w-none" style={{ '--hero-delay': '300ms' }}>
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-cream/15 backdrop-blur-sm lg:max-h-[480px] xl:max-h-[540px]">
+          <div className="relative h-[450px] sm:h-[500px] lg:h-auto lg:aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-cream/15 backdrop-blur-sm lg:max-h-[480px] xl:max-h-[540px]">
             <Suspense
               fallback={
                 <div className="flex h-full w-full items-center justify-center">
