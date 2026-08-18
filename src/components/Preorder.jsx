@@ -160,11 +160,17 @@ export default function Preorder({ onOrderConfirmed }) {
                 </div>
                 <div className="flex items-baseline justify-between gap-6">
                   <dt className="text-mist">Format</dt>
-                  <dd className="font-medium text-ink">Paperback &amp; E-book editions</dd>
+                  <dd className="font-medium text-ink">
+                    {edition === 'hard' ? 'Paperback' : 'E-book'}
+                  </dd>
                 </div>
                 <div className="flex items-start justify-between gap-6">
                   <dt className="text-mist">Delivery</dt>
-                  <dd className="text-right text-ink text-sm">Buyer bears delivery cost. Details shared at launch.</dd>
+                  <dd className="text-right text-ink text-sm">
+                    {edition === 'hard'
+                      ? 'Buyer bears delivery cost. Details shared at launch.'
+                      : 'E-book will be sent to your registered email address.'}
+                  </dd>
                 </div>
               </dl>
 
