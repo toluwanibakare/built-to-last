@@ -10,20 +10,13 @@ export default function Author() {
           <Reveal className="mx-auto w-full max-w-sm lg:max-w-none">
             <div className="relative">
               <div className="aspect-[4/5] w-full overflow-hidden rounded-2xl bg-cream">
-                <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-cream p-8">
-                  <div className="flex h-24 w-24 items-center justify-center rounded-full bg-night">
-                    <img
-                      src="/femi_logo.png"
-                      alt=""
-                      className="h-16 w-16 rounded-full object-cover"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <p className="font-display text-2xl text-ink">Femi Bakare</p>
-                  <p className="text-center text-xs uppercase tracking-[0.18em] text-mist">
-                    Author photograph to be added
-                  </p>
-                </div>
+                <img
+                  src="/femi_bakare.png"
+                  alt="Portrait of Femi Bakare, author of Built to Last"
+                  className="h-full w-full object-cover"
+                  width={446}
+                  height={559}
+                />
               </div>
               <div
                 className="pointer-events-none absolute -right-5 -top-5 -z-10 h-40 w-40 rounded-full border border-line"
