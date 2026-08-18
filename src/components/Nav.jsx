@@ -66,7 +66,7 @@ export default function Nav() {
             width={36}
             height={36}
           />
-          <span className="font-display text-lg font-medium tracking-tight text-ink">
+          <span className="font-display text-lg font-medium tracking-tight text-ink whitespace-nowrap">
             Built to Last
           </span>
         </a>
@@ -87,7 +87,7 @@ export default function Nav() {
         <div className="flex items-center gap-3">
           <Button
             href="#pre-order"
-            className="hidden px-5 py-2.5 text-sm sm:inline-flex"
+            className="hidden px-5 py-2.5 text-sm lg:inline-flex"
             onClick={() => setOpen(false)}
           >
             Pre-order
