@@ -17,7 +17,7 @@ export default function Footer({ onSelectPolicy }) {
       <div className="mx-auto max-w-7xl px-5 py-16 md:px-8">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr] md:gap-16">
           <div>
-            <a href="#top" className="flex items-center gap-2.5" aria-label="Built to Last — back to top">
+            <a href="#top" className="flex items-center gap-2.5" aria-label="Built to Last, back to top">
               <img
                 src="/femi_logo.png"
                 alt="Logo of Femi Bakare"
@@ -28,7 +28,7 @@ export default function Footer({ onSelectPolicy }) {
               <span className="font-display text-xl text-ink">Built to Last</span>
             </a>
             <p className="mt-5 max-w-sm leading-relaxed text-slate">
-              {book.subtitle} — by {book.author.name}.
+              {book.subtitle}, by {book.author.name}.
             </p>
 
             <div className="mt-7 flex gap-3" aria-label="Follow the author">

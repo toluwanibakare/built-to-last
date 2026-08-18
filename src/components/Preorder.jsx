@@ -25,25 +25,19 @@ function formatMoney(amount, currency) {
 }
 
 export default function Preorder({ onOrderConfirmed }) {
+  const [edition, setEdition] = useState('hard')
   const [form, setForm] = useState({
     name: '',
     email: '',
-    phone: '',
-    country: COUNTRIES[0],
-    state: '',
+    whatsapp: '',
+    country: 'Nigeria',
+    state: 'Lagos',
     address: '',
     quantity: '1',
   })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
-
-  const priceConfigured = config.order.price > 0
-
-  const total = useMemo(() => {
-    const qty = Math.max(1, parseInt(form.quantity, 10) || 1)
-    return qty * config.order.price + config.order.shippingCost
-  }, [form.quantity])
 
   const setField = (name) => (e) => {
     setForm((f) => ({ ...f, [name]: e.target.value }))
@@ -54,9 +48,10 @@ export default function Preorder({ onOrderConfirmed }) {
     const next = {}
     if (!form.name.trim()) next.name = 'Please enter your full name'
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) next.email = 'Please enter a valid email address'
-    if (!form.phone.trim()) next.phone = 'Please enter your phone number'
-    if (!form.state.trim()) next.state = 'Please enter your state or region'
-    if (!form.address.trim()) next.address = 'Please enter your delivery address'
+    if (!form.whatsapp.trim()) next.whatsapp = 'Please enter your WhatsApp number'
+    if (edition === 'hard') {
+      if (!form.address.trim()) next.address = 'Please enter your delivery address'
+    }
     const qty = parseInt(form.quantity, 10)
     if (!qty || qty < 1 || qty > 20) next.quantity = 'Choose a quantity between 1 and 20'
     setErrors(next)
@@ -67,73 +62,36 @@ export default function Preorder({ onOrderConfirmed }) {
     e.preventDefault()
     setMessage('')
 
-    if (!priceConfigured) {
-      setMessage('Pricing will be announced soon — check back to place your pre-order.')
-      return
-    }
-
     if (!validate()) return
 
     setStatus('creating')
     try {
       const quantity = parseInt(form.quantity, 10)
-      const order = buildOrder({
+      const order = {
+        reference: 'PRE-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
         customer: {
           name: form.name.trim(),
           email: form.email.trim(),
-          phone: form.phone.trim(),
-          country: form.country,
-          state: form.state.trim(),
-          address: form.address.trim(),
+          phone: form.whatsapp.trim(),
+          country: edition === 'hard' ? 'Nigeria' : 'N/A',
+          state: edition === 'hard' ? form.state : 'N/A',
+          address: edition === 'hard' ? form.address.trim() : 'N/A',
         },
         quantity,
-      })
+        total: 0,
+        currency: 'NGN',
+        paymentReference: 'PRE-ORDER-WAITLIST',
+        paymentStatus: 'pending',
+        status: 'processing',
+        edition: edition === 'hard' ? 'Hard Copy (Paperback)' : 'Soft Copy (E-book)',
+      }
 
-      await createOrder({
-        reference: order.reference,
-        customer: order.customer,
-        quantity,
-        amount: order.total,
-        currency: order.currency,
-      })
-
-      setStatus('paying')
-      initializeCheckout({
-        reference: order.reference,
-        amount: order.total,
-        currency: order.currency,
-        customer: { name: order.customer.name, email: order.customer.email },
-        narration: `Pre-order: ${config.order.bookTitle} (${quantity} copy${quantity > 1 ? 's' : ''})`,
-        metadata: { orderId: order.reference, qty: String(quantity) },
-        onSuccess: async (data) => {
-          try {
-            await verifyPayment({ reference: data.reference || order.reference, orderId: order.reference })
-          } catch {
-            setStatus('idle')
-            setMessage('Payment was received, but we could not confirm it automatically. Please contact us with your order number.')
-            return
-          }
-          onOrderConfirmed({
-            ...order,
-            paymentReference: data.reference || order.reference,
-            paymentStatus: 'paid',
-            status: 'processing',
-          })
-        },
-        onFailed: () => {
-          setStatus('idle')
-          setMessage('The payment did not go through. Please try again.')
-        },
-        onClose: () => {
-          setStatus((current) => (current === 'paying' ? 'idle' : current))
-        },
-        onPending: () => {
-          setMessage('Your bank transfer is being confirmed. We will confirm your order once it clears.')
-        },
-      })
+      // High-end feel loading delay
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      onOrderConfirmed(order)
     } catch {
       setStatus('idle')
-      setMessage('Something went wrong while starting your payment. Please try again.')
+      setMessage('Something went wrong. Please try again.')
     }
   }
 
@@ -156,11 +114,11 @@ export default function Preorder({ onOrderConfirmed }) {
                 </div>
                 <div className="flex items-baseline justify-between gap-6">
                   <dt className="text-mist">Price per copy</dt>
-                  <dd className="font-medium text-ink">{config.order.priceLabel}</dd>
+                  <dd className="font-medium text-ink">To be announced</dd>
                 </div>
                 <div className="flex items-baseline justify-between gap-6">
                   <dt className="text-mist">Format</dt>
-                  <dd className="font-medium text-ink">Paperback · {book.pages} pages</dd>
+                  <dd className="font-medium text-ink">Paperback & E-book editions</dd>
                 </div>
                 <div className="flex items-baseline justify-between gap-6">
                   <dt className="text-mist">Shipping</dt>
@@ -169,8 +127,7 @@ export default function Preorder({ onOrderConfirmed }) {
               </dl>
 
               <p className="text-sm leading-relaxed text-mist">
-                An e-book edition will be made available later. The physical book remains the
-                focus of this pre-order.
+                The paperback edition will be shipped directly at launch. The soft copy (e-book) will be sent to your registered email address.
               </p>
             </Reveal>
           </div>
@@ -182,6 +139,40 @@ export default function Preorder({ onOrderConfirmed }) {
               className="rounded-2xl border border-line bg-cream p-8 shadow-soft md:p-10"
             >
               <div className="grid gap-5 md:grid-cols-2">
+                <div className="md:col-span-2 flex flex-col gap-2">
+                  <label className="text-sm font-medium text-ink-soft">Select Book Edition</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEdition('hard')
+                        setErrors({})
+                      }}
+                      className={`rounded-lg border p-4 text-center transition-all duration-300 cursor-pointer ${
+                        edition === 'hard'
+                          ? 'border-brass bg-brass/10 text-ink font-semibold'
+                          : 'border-line bg-cream/40 text-slate hover:border-ink/20'
+                      }`}
+                    >
+                      Hard Copy (Paperback)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEdition('soft')
+                        setErrors({})
+                      }}
+                      className={`rounded-lg border p-4 text-center transition-all duration-300 cursor-pointer ${
+                        edition === 'soft'
+                          ? 'border-brass bg-brass/10 text-ink font-semibold'
+                          : 'border-line bg-cream/40 text-slate hover:border-ink/20'
+                      }`}
+                    >
+                      Soft Copy (E-book)
+                    </button>
+                  </div>
+                </div>
+
                 <Field
                   id="order-name"
                   label="Full name"
@@ -205,49 +196,53 @@ export default function Preorder({ onOrderConfirmed }) {
                   autoComplete="email"
                 />
                 <Field
-                  id="order-phone"
+                  id="order-whatsapp"
                   type="tel"
-                  label="Phone number"
-                  placeholder="+234 800 000 0000"
-                  value={form.phone}
-                  onChange={setField('phone')}
-                  error={errors.phone}
-                  required
-                  autoComplete="tel"
-                />
-                <Field
-                  id="order-country"
-                  as="select"
-                  label="Country"
-                  value={form.country}
-                  onChange={setField('country')}
-                  required
-                >
-                  {COUNTRIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </Field>
-                <Field
-                  id="order-state"
-                  label="State / region"
-                  placeholder="State or region"
-                  value={form.state}
-                  onChange={setField('state')}
-                  error={errors.state}
+                  label="WhatsApp number"
+                  placeholder="+234 818 494 0002"
+                  value={form.whatsapp}
+                  onChange={setField('whatsapp')}
+                  error={errors.whatsapp}
                   required
                 />
-                <Field
-                  id="order-address"
-                  label="Delivery address"
-                  placeholder="Street, city"
-                  value={form.address}
-                  onChange={setField('address')}
-                  error={errors.address}
-                  required
-                  className="md:col-span-2"
-                />
+
+                {edition === 'hard' && (
+                  <>
+                    <Field
+                      id="order-country"
+                      as="select"
+                      label="Country"
+                      value={form.country}
+                      onChange={setField('country')}
+                      required
+                    >
+                      <option value="Nigeria">Nigeria</option>
+                    </Field>
+                    <Field
+                      id="order-state"
+                      as="select"
+                      label="State"
+                      value={form.state}
+                      onChange={setField('state')}
+                      error={errors.state}
+                      required
+                    >
+                      <option value="Lagos">Lagos</option>
+                      <option value="Port Harcourt">Port Harcourt</option>
+                    </Field>
+                    <Field
+                      id="order-address"
+                      label="Delivery address"
+                      placeholder="Street name, area"
+                      value={form.address}
+                      onChange={setField('address')}
+                      error={errors.address}
+                      required
+                      className="md:col-span-2"
+                    />
+                  </>
+                )}
+
                 <Field
                   id="order-quantity"
                   type="number"
@@ -266,28 +261,26 @@ export default function Preorder({ onOrderConfirmed }) {
                 <div className="flex items-baseline justify-between">
                   <span className="text-sm text-mist">Total ({form.quantity || 1} copy)</span>
                   <span className="font-display text-2xl text-ink">
-                    {priceConfigured ? formatMoney(total, config.order.currency) : config.order.priceLabel}
+                    To be announced
                   </span>
                 </div>
 
                 {message ? (
-                  <p role="status" className="rounded-lg bg-cream px-4 py-3 text-sm text-ink-soft">
+                  <p role="status" className="rounded-lg bg-cream/45 px-4 py-3 text-sm text-ink-soft">
                     {message}
                   </p>
                 ) : null}
 
                 <Button
                   type="submit"
-                  loading={status === 'creating' || status === 'paying'}
-                  disabled={status === 'paying'}
+                  loading={status === 'creating'}
                   className="w-full"
                 >
-                  {priceConfigured ? 'Pre-order Your Copy' : 'Join the Pre-order List'}
+                  Join the Pre-order Waitlist
                 </Button>
 
                 <p className="text-center text-xs leading-relaxed text-mist">
-                  Payments are processed securely by Korapay. You will receive an order
-                  confirmation after payment.
+                  Pricing will be announced soon. Joining the waitlist reserves your place, and you will receive a notification with order details at launch.
                 </p>
               </div>
             </form>

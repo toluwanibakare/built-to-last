@@ -100,7 +100,7 @@ export default function Preview() {
         <SectionHeading
           eyebrow="Preview"
           title="A guided path from courtship to covenant"
-          lead={`The book unfolds in four parts across ${book.pages} pages — from the foundations laid before marriage to the final appeal.`}
+          lead={`The book unfolds in four parts across ${book.pages} pages, from the foundations laid before marriage to the final appeal.`}
           className="max-w-2xl"
         />
 

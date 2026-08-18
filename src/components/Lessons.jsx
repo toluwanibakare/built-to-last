@@ -10,7 +10,7 @@ export default function Lessons() {
           align="center"
           eyebrow="Inside the Book"
           title="Six lessons that shape a lasting marriage"
-          lead="From the foundation of salvation to the hard questions of covenant and safety — drawn directly from the book."
+          lead="From the foundation of salvation to the hard questions of covenant and safety, drawn directly from the book."
           className="mx-auto max-w-2xl"
         />
 

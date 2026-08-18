@@ -45,11 +45,18 @@ export default function Nav() {
   }, [open])
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        scrolled ? 'border-b border-line bg-paper/85 backdrop-blur-md' : 'bg-transparent'
-      }`}
-    >
+    <>
+      {open && (
+        <div
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs lg:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          scrolled ? 'border-b border-line bg-paper/85 backdrop-blur-md' : 'bg-transparent'
+        }`}
+      >
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8"
         aria-label="Main navigation"
@@ -57,7 +64,7 @@ export default function Nav() {
         <a
           href="#top"
           className="flex items-center gap-2.5"
-          aria-label="Built to Last — home"
+          aria-label="Built to Last, home"
         >
           <img
             src="/femi_logo.png"
@@ -172,5 +179,6 @@ export default function Nav() {
         </ul>
       </div>
     </header>
+    </>
   )
 }

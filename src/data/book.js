@@ -90,7 +90,7 @@ export const book = {
       part: 'Part 2',
       heading: 'Building a Marriage That Lasts',
       chapters: [
-        'Chapter Six: Now That You Are Married — Get to Work',
+        'Chapter Six: Now That You Are Married: Get to Work',
         'Chapter Seven: Back to "It Is Written"',
         'Chapter Eight: God’s Original Design',
         'Chapter Nine: One Plus One Is One',
@@ -103,7 +103,7 @@ export const book = {
       part: 'Part 3',
       heading: 'Understanding Divorce and Remarriage',
       chapters: [
-        'Chapter Thirteen: Divorce and Remarriage — What Does the Bible Say?',
+        'Chapter Thirteen: Divorce and Remarriage: What Does the Bible Say?',
         'Chapter Fourteen: Is There Biblical Ground for Divorce and Remarriage?',
         'Chapter Fifteen: Can a Christian Divorce and Remarry Because of Physical or Mental Abuse?',
         'Chapter Sixteen: Common Questions About Divorce and Remarriage',

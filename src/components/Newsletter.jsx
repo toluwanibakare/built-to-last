@@ -36,7 +36,7 @@ export default function Newsletter() {
               Be the first to know when Built to Last is available
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-ink-soft">
-              Get book updates, launch news, and pre-order openings — no noise, just the essentials.
+              Get book updates, launch news, and pre-order openings, no noise, just the essentials.
             </p>
 
             <form onSubmit={submit} className="mx-auto mt-9 flex max-w-2xl flex-col gap-3 sm:flex-row" noValidate>
