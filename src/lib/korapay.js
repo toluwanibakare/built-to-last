@@ -31,9 +31,9 @@ export function makeReference() {
 }
 
 export async function initializeCheckout({ reference, amount, currency, customer, metadata, narration, onSuccess, onFailed, onClose, onPending }) {
-  const script = await loadScript(config.korapay.scriptUrl)
+  await loadScript(config.korapay.scriptUrl)
 
-  if (!script || !window.Korapay || typeof window.Korapay.initialize !== 'function') {
+  if (!window.Korapay || typeof window.Korapay.initialize !== 'function') {
     throw new Error('Payment gateway is unavailable')
   }
 
