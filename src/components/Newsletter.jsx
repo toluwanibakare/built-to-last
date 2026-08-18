@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Reveal } from './ui/Reveal'
 import { Button } from './ui/Button'
-import { Field } from './ui/Field'
+import { supabase } from '../lib/supabase'
 
 export default function Newsletter() {
   const [name, setName] = useState('')
@@ -9,19 +9,35 @@ export default function Newsletter() {
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       setStatus('error')
       setMessage('Please enter a valid email address.')
       return
     }
-    setStatus('success')
-    setMessage(
-      name.trim()
-        ? `Thank you, ${name.trim().split(' ')[0]}. You will hear from us when the book launches.`
-        : 'Thank you. You will hear from us when the book launches.',
-    )
+
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscribers')
+        .insert([{ email: email.trim() }])
+
+      if (error && error.code !== '23505') { // Ignore unique constraint error
+        throw error
+      }
+
+      setStatus('success')
+      setMessage(
+        name.trim()
+          ? `Thank you, ${name.trim().split(' ')[0]}. You will hear from us when the book launches.`
+          : 'Thank you. You will hear from us when the book launches.',
+      )
+      setEmail('')
+      setName('')
+    } catch (err) {
+      setStatus('error')
+      setMessage('Something went wrong. Please try again.')
+    }
   }
 
   return (

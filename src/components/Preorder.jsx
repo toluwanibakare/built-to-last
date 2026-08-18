@@ -91,6 +91,7 @@ export default function Preorder({ onOrderConfirmed }) {
         quantity,
         amount: order.total,
         currency: order.currency,
+        edition: order.edition,
       })
 
       setStatus('paying')
