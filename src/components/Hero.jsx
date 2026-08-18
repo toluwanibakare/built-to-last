@@ -59,7 +59,7 @@ export default function Hero() {
           </div>
 
           <dl
-            className="hero-enter mt-6 grid grid-cols-3 gap-4 border-t border-line pt-4"
+            className="hero-enter mt-6 flex justify-between gap-6 border-t border-line pt-4"
             style={{ '--hero-delay': '480ms' }}
           >
             <div className="whitespace-nowrap">
