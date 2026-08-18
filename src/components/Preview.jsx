@@ -101,7 +101,7 @@ export default function Preview() {
 
         <div className="mt-16 grid gap-14 lg:grid-cols-2 lg:gap-20">
           <Reveal>
-            <div className="grid gap-12 rounded-2xl border border-line bg-white p-8 md:grid-cols-2 md:p-10">
+            <div className="grid gap-12 rounded-2xl border border-line bg-cream p-8 md:grid-cols-2 md:p-10">
               <TocColumn part={colA[0]} />
               <TocColumn part={colA[1]} />
             </div>
@@ -109,14 +109,14 @@ export default function Preview() {
 
           <div className="flex flex-col gap-14">
             <Reveal delay={120}>
-              <div className="grid gap-12 rounded-2xl border border-line bg-white p-8 md:grid-cols-2 md:p-10">
+              <div className="grid gap-12 rounded-2xl border border-line bg-cream p-8 md:grid-cols-2 md:p-10">
                 <TocColumn part={colB[0]} />
                 <TocColumn part={colB[1]} />
               </div>
             </Reveal>
 
             <Reveal delay={200}>
-              <div className="rounded-2xl bg-night p-8 text-paper md:p-10">
+              <div className="rounded-2xl bg-night p-8 text-ink md:p-10">
                 <QuoteRotation />
               </div>
             </Reveal>

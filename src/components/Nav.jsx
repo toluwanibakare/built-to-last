@@ -78,7 +78,7 @@ export default function Nav() {
 
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white/70 text-ink backdrop-blur transition-colors hover:border-ink/40 lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-cream/30 text-ink backdrop-blur transition-colors hover:border-ink/40 lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? 'Close menu' : 'Open menu'}

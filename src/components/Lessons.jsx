@@ -4,7 +4,7 @@ import { book } from '../data/book'
 
 export default function Lessons() {
   return (
-    <section id="lessons" className="scroll-mt-24 border-y border-line bg-white/50 py-24 md:py-32">
+    <section id="lessons" className="scroll-mt-24 border-y border-line bg-cream/30 py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHeading
           align="center"

@@ -4,7 +4,7 @@ import { book } from '../data/book'
 
 export default function Author() {
   return (
-    <section id="author" className="scroll-mt-24 border-y border-line bg-white/50 py-24 md:py-32">
+    <section id="author" className="scroll-mt-24 border-y border-line bg-cream/30 py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="grid items-center gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
           <Reveal className="mx-auto w-full max-w-sm lg:max-w-none">

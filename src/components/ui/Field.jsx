@@ -2,8 +2,8 @@ export function Field({ label, id, error, hint, className = '', as, children, ..
   const errorId = error ? `${id}-error` : undefined
   const Tag = as || 'input'
 
-  const inputClasses = `w-full rounded-lg border bg-white px-4 py-3 text-base text-ink transition-all duration-300 placeholder:text-mist focus:border-brass focus:ring-2 focus:ring-brass/20 focus:outline-none ${
-    error ? 'border-red-400 bg-red-50/50' : 'border-line'
+  const inputClasses = `w-full rounded-lg border bg-cream px-4 py-3 text-base text-ink transition-all duration-300 placeholder:text-mist focus:border-brass focus:ring-2 focus:ring-brass/20 focus:outline-none ${
+    error ? 'border-red-500 bg-red-950/20' : 'border-line'
   }`
 
   return (
