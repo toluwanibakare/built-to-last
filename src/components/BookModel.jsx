@@ -1,5 +1,5 @@
-import { useMemo, useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
 import { TextureLoader } from 'three'
 import * as THREE from 'three'
 
@@ -7,19 +7,24 @@ import frontCoverUrl from '../assets/book/front_cover.jpeg'
 import backCoverUrl from '../assets/book/back_cover.jpeg'
 import spineUrl from '../assets/book/spine_image.jpeg'
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-
 const COVER_W = 1.66
 const COVER_H = 2.5
 const PAGE_W = 1.5
 const PAGE_H = 2.28
 const THICKNESS = 0.13
 
-const VIEWS = {
-  front: new THREE.Vector3(0, 0.25, 4.6),
-  back: new THREE.Vector3(0, 0.25, -4.6),
-  spine: new THREE.Vector3(4.2, 0.25, 0),
+export const PRESETS = {
+  front: { y: 0, x: 0 },
+  spine: { y: -Math.PI / 2, x: 0 },
+  back: { y: Math.PI, x: 0 },
 }
+
+const ROTATE_SPEED = 0.006
+const ZOOM_SPEED = 0.0016
+const MIN_DIST = 3.1
+const MAX_DIST = 7.2
+const MIN_TILT = -0.5
+const MAX_TILT = 0.55
 
 function useBookTextures() {
   const loader = useMemo(() => new TextureLoader(), [])
@@ -114,40 +119,105 @@ function BookCover({ width, height, thickness, position, front, back, spine }) {
 
 const Book = forwardRef(function Book({ onFirstInteract }, ref) {
   const { front, back, spine } = useBookTextures()
-  const controlsRef = useRef(null)
-  const target = useRef(VIEWS.front.clone())
-  const [interacted, setInteracted] = useState(false)
+  const groupRef = useRef(null)
+  const stateRef = useRef({
+    targetY: 0,
+    targetX: 0,
+    targetZ: 4.6,
+    velocityY: 0,
+    velocityX: 0,
+    dragging: false,
+    lastX: 0,
+    lastY: 0,
+  })
+  const onFirstInteractRef = useRef(onFirstInteract)
+  onFirstInteractRef.current = onFirstInteract
 
   useImperativeHandle(ref, () => ({
     setView: (view) => {
-      target.current.copy(VIEWS[view])
+      const preset = PRESETS[view]
+      const s = stateRef.current
+      s.targetY = preset.y
+      s.targetX = preset.x
+      s.velocityY = 0
+      s.velocityX = 0
     },
   }))
 
+  const gl = useThree((s) => s.gl)
+
   useEffect(() => {
-    const controls = controlsRef.current
-    if (!controls) return
-    const handle = () => {
-      if (!interacted) {
-        setInteracted(true)
-        onFirstInteract?.()
-      }
+    const canvas = gl.domElement
+    canvas.style.touchAction = 'none'
+    const s = stateRef.current
+
+    const onPointerDown = (e) => {
+      s.dragging = true
+      s.lastX = e.clientX
+      s.lastY = e.clientY
+      s.velocityY = 0
+      s.velocityX = 0
+      canvas.setPointerCapture?.(e.pointerId)
     }
-    controls.addEventListener('start', handle)
-    return () => controls.removeEventListener('start', handle)
-  }, [interacted, onFirstInteract])
+
+    const onPointerMove = (e) => {
+      if (!s.dragging) return
+      const dx = e.clientX - s.lastX
+      const dy = e.clientY - s.lastY
+      s.lastX = e.clientX
+      s.lastY = e.clientY
+      s.targetY += dx * ROTATE_SPEED
+      s.targetX = THREE.MathUtils.clamp(s.targetX + dy * ROTATE_SPEED, MIN_TILT, MAX_TILT)
+      s.velocityY = dx * ROTATE_SPEED
+      s.velocityX = dy * ROTATE_SPEED
+      onFirstInteractRef.current?.()
+    }
+
+    const onPointerUp = () => {
+      s.dragging = false
+    }
+
+    const onWheel = (e) => {
+      e.preventDefault()
+      s.targetZ = THREE.MathUtils.clamp(s.targetZ + e.deltaY * ZOOM_SPEED, MIN_DIST, MAX_DIST)
+      onFirstInteractRef.current?.()
+    }
+
+    canvas.addEventListener('pointerdown', onPointerDown)
+    canvas.addEventListener('pointermove', onPointerMove)
+    canvas.addEventListener('pointerup', onPointerUp)
+    canvas.addEventListener('pointercancel', onPointerUp)
+    canvas.addEventListener('wheel', onWheel, { passive: false })
+
+    return () => {
+      canvas.removeEventListener('pointerdown', onPointerDown)
+      canvas.removeEventListener('pointermove', onPointerMove)
+      canvas.removeEventListener('pointerup', onPointerUp)
+      canvas.removeEventListener('pointercancel', onPointerUp)
+      canvas.removeEventListener('wheel', onWheel)
+    }
+  }, [gl])
 
   useFrame(({ camera }, delta) => {
-    const controls = controlsRef.current
-    if (!controls) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) {
-      camera.position.copy(target.current)
-    } else {
-      const t = 1 - Math.pow(0.002, delta)
-      camera.position.lerp(target.current, t)
+    const s = stateRef.current
+    const group = groupRef.current
+    if (!group) return
+
+    const dt = Math.min(delta, 0.05)
+
+    if (!s.dragging) {
+      s.velocityY *= Math.pow(0.86, dt * 60)
+      s.velocityX *= Math.pow(0.86, dt * 60)
+      s.targetY += s.velocityY
+      s.targetX = THREE.MathUtils.clamp(s.targetX + s.velocityX, MIN_TILT, MAX_TILT)
     }
-    controls.update()
+
+    const k = 1 - Math.pow(0.0001, dt)
+    group.rotation.y += (s.targetY - group.rotation.y) * k
+    group.rotation.x += (s.targetX - group.rotation.x) * k
+
+    camera.position.z += (s.targetZ - camera.position.z) * k
+    camera.position.y = 0.25 + (camera.position.z - 3.1) * 0.045
   })
 
   return (
@@ -157,7 +227,7 @@ const Book = forwardRef(function Book({ onFirstInteract }, ref) {
       <directionalLight position={[-5, 2, -4]} intensity={0.5} color="#a9b4c8" />
       <directionalLight position={[0, -3, 6]} intensity={0.35} color="#fff6e0" />
 
-      <group>
+      <group ref={groupRef} style={{ cursor: 'grab' }}>
         <BookCover
           width={COVER_W}
           height={COVER_H}
@@ -180,21 +250,6 @@ const Book = forwardRef(function Book({ onFirstInteract }, ref) {
       </group>
 
       <ContactShadow />
-
-      <OrbitControls
-        ref={controlsRef}
-        makeDefault
-        enablePan={false}
-        enableZoom
-        enableDamping
-        dampingFactor={0.08}
-        rotateSpeed={0.85}
-        zoomSpeed={0.7}
-        minDistance={2.6}
-        maxDistance={8}
-        minPolarAngle={Math.PI / 2 - 0.55}
-        maxPolarAngle={Math.PI / 2 + 0.5}
-      />
     </group>
   )
 })

@@ -19,7 +19,7 @@ export default function Hero() {
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-32 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pb-28 lg:pt-40">
         <div className="max-w-xl">
           <p className="hero-enter text-xs font-semibold uppercase tracking-[0.22em] text-brass" style={{ '--hero-delay': '60ms' }}>
-            New Book by {book.author}
+            New Book by {book.author.name}
           </p>
 
           <h1

@@ -27,7 +27,7 @@ export default function Footer() {
               <span className="font-display text-xl text-ink">Built to Last</span>
             </a>
             <p className="mt-5 max-w-sm leading-relaxed text-slate">
-              {book.subtitle} — by {book.author}.
+              {book.subtitle} — by {book.author.name}.
             </p>
 
             <div className="mt-7 flex gap-3" aria-label="Follow the author">

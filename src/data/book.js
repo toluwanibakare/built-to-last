@@ -1,7 +1,6 @@
 export const book = {
   title: 'Built to Last',
   subtitle: "Discovering God's Pattern for Marriage That Endures",
-  author: 'Femi Bakare',
   authorFull: 'Pastor Oluwafemi Olatunde Bakare',
   tagline:
     'Marriage is too important to be built on opinions. It must be built on truth.',

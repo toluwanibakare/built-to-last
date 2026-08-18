@@ -1,4 +1,4 @@
-import { Suspense, lazy, useRef, useState, useCallback } from 'react'
+import { Suspense, lazy, useRef, useState, useCallback, Component } from 'react'
 import frontCoverUrl from '../assets/book/front_cover.jpeg'
 
 const BookScene = lazy(() =>
@@ -26,6 +26,27 @@ function StaticFallback() {
   )
 }
 
+class SceneBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { failed: false }
+  }
+
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+
+  componentDidCatch(error) {
+    console.error('3D scene failed', error)
+    this.props.onError?.()
+  }
+
+  render() {
+    if (this.state.failed) return <StaticFallback />
+    return this.props.children
+  }
+}
+
 export default function Book3D() {
   const bookRef = useRef(null)
   const [view, setView] = useState('front')
@@ -38,19 +59,22 @@ export default function Book3D() {
   }, [])
 
   const hideHint = useCallback(() => setHintVisible(false), [])
+  const fail = useCallback(() => setFailed(true), [])
+
+  if (failed) {
+    return (
+      <div className="h-full w-full">
+        <StaticFallback />
+      </div>
+    )
+  }
 
   return (
     <div className="relative h-full w-full">
       <Suspense fallback={<LoadingState />}>
-        {failed ? (
-          <StaticFallback />
-        ) : (
-          <BookScene
-            ref={bookRef}
-            onError={() => setFailed(true)}
-            onFirstInteract={hideHint}
-          />
-        )}
+        <SceneBoundary onError={fail}>
+          <BookScene ref={bookRef} onError={fail} onFirstInteract={hideHint} />
+        </SceneBoundary>
       </Suspense>
 
       <div
