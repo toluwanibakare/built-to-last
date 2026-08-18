@@ -32,26 +32,26 @@ export default function Newsletter() {
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brass">
               Stay close
             </p>
-            <h2 id="newsletter-title" className="mx-auto mt-4 max-w-2xl font-display text-3xl leading-tight text-paper md:text-4xl">
+            <h2 id="newsletter-title" className="mx-auto mt-4 max-w-2xl font-display text-3xl leading-tight text-ink md:text-4xl">
               Be the first to know when Built to Last is available
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-paper/70">
+            <p className="mx-auto mt-5 max-w-xl text-ink-soft">
               Get book updates, launch news, and pre-order openings — no noise, just the essentials.
             </p>
 
-            <form onSubmit={submit} className="mx-auto mt-9 flex max-w-md flex-col gap-3 sm:flex-row" noValidate>
-              <div className="flex-1">
+            <form onSubmit={submit} className="mx-auto mt-9 flex max-w-2xl flex-col gap-3 sm:flex-row" noValidate>
+              <div className="sm:flex-[1.4] flex-1">
                 <input
                   type="text"
                   id="newsletter-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name (optional)"
-                  className="w-full rounded-lg border border-paper/20 bg-night-soft px-4 py-3 text-base text-paper placeholder:text-paper/40 transition-all duration-300 focus:border-brass focus:ring-2 focus:ring-brass/30 focus:outline-none"
+                  className="w-full rounded-lg border border-ink/20 bg-night-soft px-4 py-3 text-base text-ink placeholder:text-ink/40 transition-all duration-300 focus:border-brass focus:ring-2 focus:ring-brass/30 focus:outline-none"
                   aria-label="Your name"
                 />
               </div>
-              <div className="flex-1">
+              <div className="sm:flex-[1] flex-1">
                 <input
                   type="email"
                   id="newsletter-email"
@@ -59,11 +59,11 @@ export default function Newsletter() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email"
                   required
-                  className="w-full rounded-lg border border-paper/20 bg-night-soft px-4 py-3 text-base text-paper placeholder:text-paper/40 transition-all duration-300 focus:border-brass focus:ring-2 focus:ring-brass/30 focus:outline-none"
+                  className="w-full rounded-lg border border-ink/20 bg-night-soft px-4 py-3 text-base text-ink placeholder:text-ink/40 transition-all duration-300 focus:border-brass focus:ring-2 focus:ring-brass/30 focus:outline-none"
                   aria-label="Your email"
                 />
               </div>
-              <Button type="submit" variant="light" className="shrink-0">
+              <Button type="submit" variant="primary" className="shrink-0">
                 Get Book Updates
               </Button>
             </form>
@@ -72,7 +72,7 @@ export default function Newsletter() {
               <p
                 role={status === 'error' ? 'alert' : 'status'}
                 className={`mx-auto mt-5 max-w-md text-sm ${
-                  status === 'error' ? 'text-red-300' : 'text-paper/70'
+                  status === 'error' ? 'text-red-300' : 'text-ink-soft'
                 }`}
               >
                 {message}

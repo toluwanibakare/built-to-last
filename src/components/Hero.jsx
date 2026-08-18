@@ -6,7 +6,7 @@ const Book3D = lazy(() => import('./Book3D.jsx'))
 
 export default function Hero() {
   return (
-    <section id="top" className="relative flex min-h-screen items-center overflow-hidden lg:h-screen lg:min-h-[700px] lg:max-h-[950px] xl:max-h-[1080px]">
+    <section id="top" className="relative flex min-h-screen flex-col overflow-hidden lg:h-screen lg:min-h-[700px] lg:max-h-[900px] xl:max-h-[1000px]">
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
@@ -16,39 +16,42 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-5 pb-12 pt-24 md:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 lg:pb-12 lg:pt-28">
+      {/* Top spacer to clear the fixed navbar */}
+      <div className="h-[76px] shrink-0" />
+
+      <div className="relative mx-auto flex-1 grid w-full max-w-7xl items-center gap-8 px-5 pb-8 pt-2 md:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 lg:pb-10 lg:pt-4">
         <div className="max-w-xl">
           <p className="hero-enter text-xs font-semibold uppercase tracking-[0.22em] text-brass" style={{ '--hero-delay': '60ms' }}>
             New Book by {book.author.name}
           </p>
 
           <h1
-            className="hero-enter mt-4 font-display text-5xl leading-[1.02] tracking-tight text-ink md:text-7xl lg:text-[4.2rem] xl:text-[5rem]"
+            className="hero-enter mt-3 font-display text-4xl leading-[1.04] tracking-tight text-ink md:text-6xl lg:text-[3.5rem] xl:text-[4.2rem]"
             style={{ '--hero-delay': '140ms' }}
           >
             {book.title}
-            <span className="mt-3 block font-display text-xl font-light italic leading-snug text-brass md:text-2xl xl:text-3xl">
+            <span className="mt-2 block font-display text-lg font-light italic leading-snug text-brass md:text-xl xl:text-2xl">
               {book.subtitle}
             </span>
           </h1>
 
           <blockquote
-            className="hero-enter mt-5 border-l-2 border-brass pl-4"
+            className="hero-enter mt-4 border-l-2 border-brass pl-4"
             style={{ '--hero-delay': '240ms' }}
           >
-            <p className="font-display text-base italic leading-relaxed text-ink-soft md:text-lg">
+            <p className="font-display text-sm italic leading-relaxed text-ink-soft md:text-base">
               {book.tagline}
             </p>
           </blockquote>
 
           <p
-            className="hero-enter mt-5 max-w-lg text-sm leading-relaxed text-slate md:text-base"
+            className="hero-enter mt-3.5 max-w-lg text-xs leading-relaxed text-slate md:text-sm"
             style={{ '--hero-delay': '320ms' }}
           >
             {book.shortDescription}
           </p>
 
-          <div className="hero-enter mt-6 flex flex-wrap items-center gap-4" style={{ '--hero-delay': '400ms' }}>
+          <div className="hero-enter mt-5 flex flex-wrap items-center gap-4" style={{ '--hero-delay': '400ms' }}>
             <Button href="#pre-order">Pre-order Your Copy</Button>
             <Button href="#preview" variant="outline">
               Explore the Book
@@ -56,7 +59,7 @@ export default function Hero() {
           </div>
 
           <dl
-            className="hero-enter mt-8 flex flex-wrap gap-x-10 gap-y-3 border-t border-line pt-5"
+            className="hero-enter mt-6 flex flex-wrap gap-x-10 gap-y-3 border-t border-line pt-4"
             style={{ '--hero-delay': '480ms' }}
           >
             <div>
@@ -69,7 +72,7 @@ export default function Hero() {
               <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-mist">
                 Format
               </dt>
-              <dd className="mt-1 font-display text-2xl text-ink">Hardcover</dd>
+              <dd className="mt-1 font-display text-2xl text-ink">Paperback</dd>
             </div>
             <div>
               <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-mist">
@@ -81,7 +84,7 @@ export default function Hero() {
         </div>
 
         <div className="hero-enter relative mx-auto w-full max-w-md lg:max-w-none" style={{ '--hero-delay': '300ms' }}>
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-cream/15 backdrop-blur-sm lg:max-h-[500px] xl:max-h-[550px]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-cream/15 backdrop-blur-sm lg:max-h-[480px] xl:max-h-[540px]">
             <Suspense
               fallback={
                 <div className="flex h-full w-full items-center justify-center">

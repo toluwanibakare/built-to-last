@@ -179,7 +179,7 @@ export default function Preorder({ onOrderConfirmed }) {
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="rounded-2xl border border-line bg-white p-8 shadow-soft md:p-10"
+              className="rounded-2xl border border-line bg-cream p-8 shadow-soft md:p-10"
             >
               <div className="grid gap-5 md:grid-cols-2">
                 <Field

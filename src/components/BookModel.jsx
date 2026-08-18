@@ -7,15 +7,15 @@ import frontCoverUrl from '../assets/book/front_cover.jpeg'
 import backCoverUrl from '../assets/book/back_cover.jpeg'
 import spineUrl from '../assets/book/spine_image.jpeg'
 
-const COVER_W = 1.66
-const COVER_H = 2.5
-const PAGE_W = 1.5
-const PAGE_H = 2.28
-const THICKNESS = 0.13
+const COVER_W = 1.5
+const COVER_H = 2.28
+const PAGE_W = 1.48
+const PAGE_H = 2.26
+const THICKNESS = 0.15
 
 export const PRESETS = {
   front: { y: 0, x: 0 },
-  spine: { y: -Math.PI / 2, x: 0 },
+  spine: { y: Math.PI / 2, x: 0 },
   back: { y: Math.PI, x: 0 },
 }
 
@@ -97,22 +97,62 @@ function PageBlock() {
   )
 }
 
-function BookCover({ width, height, thickness, position, front, back, spine }) {
-  const coverMaterials = useMemo(
+function FrontCover({ width, height, thickness, position, texture }) {
+  const materials = useMemo(
     () => [
-      new THREE.MeshStandardMaterial({ map: spine, roughness: 0.75, metalness: 0.05 }),
-      new THREE.MeshStandardMaterial({ map: spine, roughness: 0.75, metalness: 0.05 }),
-      new THREE.MeshStandardMaterial({ color: '#1c2530', roughness: 0.9 }),
-      new THREE.MeshStandardMaterial({ color: '#1c2530', roughness: 0.9 }),
-      new THREE.MeshStandardMaterial({ map: front, roughness: 0.7, metalness: 0.06 }),
-      new THREE.MeshStandardMaterial({ map: back, roughness: 0.7, metalness: 0.06 }),
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // x+
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // x-
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // y+
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // y-
+      new THREE.MeshStandardMaterial({ map: texture, roughness: 0.7, metalness: 0.06 }), // z+ (front)
+      new THREE.MeshStandardMaterial({ color: '#e5e0d4', roughness: 0.9 }), // z- (inside cover)
     ],
-    [front, back, spine],
+    [texture],
   )
 
   return (
-    <mesh position={position} material={coverMaterials}>
+    <mesh position={position} material={materials}>
       <boxGeometry args={[width, height, thickness]} />
+    </mesh>
+  )
+}
+
+function BackCover({ width, height, thickness, position, texture }) {
+  const materials = useMemo(
+    () => [
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // x+
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // x-
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // y+
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // y-
+      new THREE.MeshStandardMaterial({ color: '#e5e0d4', roughness: 0.9 }), // z+ (inside cover)
+      new THREE.MeshStandardMaterial({ map: texture, roughness: 0.7, metalness: 0.06 }), // z- (back)
+    ],
+    [texture],
+  )
+
+  return (
+    <mesh position={position} material={materials}>
+      <boxGeometry args={[width, height, thickness]} />
+    </mesh>
+  )
+}
+
+function Spine({ width, height, depth, position, texture }) {
+  const materials = useMemo(
+    () => [
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // x+ (inside spine)
+      new THREE.MeshStandardMaterial({ map: texture, roughness: 0.75, metalness: 0.05 }), // x- (outer spine)
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // y+
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // y-
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // z+
+      new THREE.MeshStandardMaterial({ color: '#161b25', roughness: 0.8 }), // z-
+    ],
+    [texture],
+  )
+
+  return (
+    <mesh position={position} material={materials}>
+      <boxGeometry args={[width, height, depth]} />
     </mesh>
   )
 }
@@ -228,24 +268,27 @@ const Book = forwardRef(function Book({ onFirstInteract }, ref) {
       <directionalLight position={[0, -3, 6]} intensity={0.35} color="#fff6e0" />
 
       <group ref={groupRef} style={{ cursor: 'grab' }}>
-        <BookCover
+        <FrontCover
           width={COVER_W}
           height={COVER_H}
-          thickness={0.05}
-          position={[0, 0, THICKNESS / 2 + 0.026]}
-          front={front}
-          back={back}
-          spine={spine}
+          thickness={0.006}
+          position={[0, 0, THICKNESS / 2 + 0.003]}
+          texture={front}
         />
         <PageBlock />
-        <BookCover
+        <BackCover
           width={COVER_W}
           height={COVER_H}
-          thickness={0.05}
-          position={[0, 0, -THICKNESS / 2 - 0.026]}
-          front={front}
-          back={back}
-          spine={spine}
+          thickness={0.006}
+          position={[0, 0, -THICKNESS / 2 - 0.003]}
+          texture={back}
+        />
+        <Spine
+          width={0.006}
+          height={COVER_H}
+          depth={THICKNESS + 0.012}
+          position={[-COVER_W / 2 + 0.003, 0, 0]}
+          texture={spine}
         />
       </group>
 

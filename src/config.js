@@ -3,8 +3,8 @@ const env = import.meta.env || {}
 export const config = {
   site: {
     name: 'Built to Last',
-    canonicalUrl: 'https://built-to-last.example.com',
-    contactEmail: env.VITE_CONTACT_EMAIL || 'hello@built-to-last.example',
+    canonicalUrl: env.VITE_CANONICAL_URL || 'https://voiceoftruthonline.com',
+    contactEmail: env.VITE_CONTACT_EMAIL || 'voiceoftruthonline@gmail.com',
   },
   order: {
     bookTitle: 'Built to Last: Discovering God’s Pattern for Marriage That Endures',
@@ -24,8 +24,9 @@ export const config = {
     verifyEndpoint: '/api/verify',
   },
   social: {
-    facebook: env.VITE_SOCIAL_FACEBOOK || '',
-    instagram: env.VITE_SOCIAL_INSTAGRAM || '',
-    youtube: env.VITE_SOCIAL_YOUTUBE || '',
+    facebook: env.VITE_SOCIAL_FACEBOOK || 'https://facebook.com/femi.bakare2',
+    instagram: env.VITE_SOCIAL_INSTAGRAM || 'https://instagram.com/voiceoftruthonline',
+    youtube: env.VITE_SOCIAL_YOUTUBE || 'https://youtube.com/@TheFemisola',
+    whatsapp: env.VITE_SOCIAL_WHATSAPP || 'https://wa.me/2348184940002',
   },
 }

@@ -1,7 +1,7 @@
 export const book = {
   title: 'Built to Last',
   subtitle: "Discovering God's Pattern for Marriage That Endures",
-  authorFull: 'Pastor Oluwafemi Olatunde Bakare',
+  authorFull: 'Femi Bakare',
   tagline:
     'Marriage is too important to be built on opinions. It must be built on truth.',
   pages: 346,
@@ -129,11 +129,11 @@ export const book = {
   ],
   author: {
     name: 'Femi Bakare',
-    fullName: 'Oluwafemi Olatunde Bakare',
+    fullName: 'Femi Bakare',
     ministry: 'Voice of Truth Apostolic Global Ministry',
     role: 'Bible teacher, author, and President of Voice of Truth Apostolic Global Ministry',
     bio: [
-      'Oluwafemi Olatunde Bakare (Femi Bakare) is a Bible teacher, author, and President of Voice of Truth Apostolic Global Ministry. He is the host of the platform Making Sense of Scriptures and the convener of the Immortality Readiness Conference, dedicated to grounding believers in sound doctrine and preparing the Church for the return of Christ.',
+      'Femi Bakare is a Bible teacher, author, and President of Voice of Truth Apostolic Global Ministry. He is the host of the platform Making Sense of Scriptures and the convener of the Immortality Readiness Conference, dedicated to grounding believers in sound doctrine and preparing the Church for the return of Christ.',
       'He also serves as an Associate Pastor at FirstLove Assembly in Port Harcourt, Nigeria. Pastor Bakare has been married to his wife, Monisola, for over twenty-one years, and they reside in Nigeria with their two children, Toluwani and Faithful. He writes with deep vulnerability, drawing on both his deep study of Scripture and his personal lived experiences.',
     ],
   },

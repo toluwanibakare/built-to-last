@@ -12,6 +12,23 @@ const LINKS = [
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+    }
+    return 'dark'
+  })
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (theme === 'dark') {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+  }, [theme])
+
+  const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -45,7 +62,7 @@ export default function Nav() {
           <img
             src="/femi_logo.png"
             alt="Logo of Femi Bakare"
-            className="h-9 w-9 rounded-full object-cover"
+            className="h-9 w-auto"
             width={36}
             height={36}
           />
@@ -75,6 +92,24 @@ export default function Nav() {
           >
             Pre-order
           </Button>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-cream/30 text-ink backdrop-blur transition-colors hover:border-ink/40"
+            aria-label="Toggle color theme"
+          >
+            {theme === 'dark' ? (
+              <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth={1.8}>
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72l-1.41 1.41" strokeLinecap="round" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth={1.8}>
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+          </button>
 
           <button
             type="button"

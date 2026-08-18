@@ -1,4 +1,4 @@
-import { FacebookIcon, InstagramIcon, YouTubeIcon, MailIcon } from './icons/icons'
+import { FacebookIcon, InstagramIcon, YouTubeIcon, MailIcon, WhatsAppIcon } from './icons/icons'
 import { config } from '../config'
 import { book } from '../data/book'
 
@@ -6,9 +6,10 @@ const SOCIALS = [
   { name: 'Facebook', href: config.social.facebook, Icon: FacebookIcon },
   { name: 'Instagram', href: config.social.instagram, Icon: InstagramIcon },
   { name: 'YouTube', href: config.social.youtube, Icon: YouTubeIcon },
+  { name: 'WhatsApp', href: config.social.whatsapp, Icon: WhatsAppIcon },
 ]
 
-export default function Footer() {
+export default function Footer({ onSelectPolicy }) {
   const year = new Date().getFullYear()
 
   return (
@@ -20,7 +21,7 @@ export default function Footer() {
               <img
                 src="/femi_logo.png"
                 alt="Logo of Femi Bakare"
-                className="h-10 w-10 rounded-full object-cover"
+                className="h-10 w-auto"
                 width={40}
                 height={40}
               />
@@ -79,22 +80,49 @@ export default function Footer() {
               <MailIcon className="h-4 w-4 text-brass" />
               {config.site.contactEmail}
             </a>
-            <p className="mt-4 text-sm leading-relaxed text-mist">
+            <a
+              href="https://voiceoftruthonline.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-1 text-sm leading-relaxed text-mist hover:text-ink transition-colors duration-300"
+            >
               {book.author.ministry}
-            </p>
+              <svg viewBox="0 0 24 24" className="h-3 w-3 fill-none stroke-current" strokeWidth={2} aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6m4-3h6v6m-11 5L21 3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
           </div>
         </div>
 
         <div className="mt-14 flex flex-col gap-4 border-t border-line pt-7 text-xs text-mist md:flex-row md:items-center md:justify-between">
           <p>
-            © {year} {book.authorFull}. All rights reserved.
+            © {year} {book.authorFull}. All rights reserved. | Built by{' '}
+            <a
+              href="https://www.tmb.it.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-ink transition-colors duration-300"
+            >
+              TMB
+              <svg viewBox="0 0 24 24" className="h-3 w-3 fill-none stroke-current" strokeWidth={2} aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6m4-3h6v6m-11 5L21 3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
           </p>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
-            {['Privacy Policy', 'Terms', 'Shipping & Refund Policy'].map((label) => (
-              <li key={label}>
-                <a href="#top" className="transition-colors duration-300 hover:text-ink">
-                  {label}
-                </a>
+            {[
+              { id: 'privacy', label: 'Privacy Policy' },
+              { id: 'terms', label: 'Terms' },
+              { id: 'shipping', label: 'Shipping & Refund Policy' },
+            ].map((link) => (
+              <li key={link.id}>
+                <button
+                  type="button"
+                  onClick={() => onSelectPolicy?.(link.id)}
+                  className="transition-colors duration-300 hover:text-ink cursor-pointer bg-transparent border-none text-left"
+                >
+                  {link.label}
+                </button>
               </li>
             ))}
           </ul>

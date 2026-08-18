@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #fbf9f5;
-  --color-ink-soft: #e5e0d4;
-  --color-slate: #94a3b8;
-  --color-mist: #64748b;
-  --color-paper: #0c0f16;
-  --color-cream: #131922;
-  --color-line: rgba(229, 224, 212, 0.12);
-  --color-brass: #a98e4e;
-  --color-brass-deep: #8f7639;
-  --color-night: #090c11;
-  --color-night-soft: #18202d;
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-slate: var(--slate);
+  --color-mist: var(--mist);
+  --color-paper: var(--paper);
+  --color-cream: var(--cream);
+  --color-line: var(--line);
+  --color-brass: var(--brass);
+  --color-brass-deep: var(--brass-deep);
+  --color-night: var(--night);
+  --color-night-soft: var(--night-soft);
 
   --font-display: "Fraunces", "Georgia", serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -20,6 +20,34 @@
 
   --shadow-book: 0 30px 60px -20px rgb(0 0 0 / 0.8), 0 10px 25px -12px rgb(0 0 0 / 0.6);
   --shadow-soft: 0 12px 32px -14px rgb(0 0 0 / 0.5);
+}
+
+:root {
+  --ink: #1d2534;
+  --ink-soft: #39455c;
+  --slate: #58647a;
+  --mist: #8a93a5;
+  --paper: #fbf9f5;
+  --cream: #f3efe7;
+  --line: #e5e0d4;
+  --brass: #e0bc3f;
+  --brass-deep: #cfa424;
+  --night: #e5e0d4;
+  --night-soft: #fbf9f5;
+}
+
+:root.dark {
+  --ink: #fbf9f5;
+  --ink-soft: #e5e0d4;
+  --slate: #94a3b8;
+  --mist: #64748b;
+  --paper: #0b0d10;
+  --cream: #13161c;
+  --line: rgba(229, 224, 212, 0.1);
+  --brass: #e0bc3f;
+  --brass-deep: #cfa424;
+  --night: #060709;
+  --night-soft: #1b1e25;
 }
 
 @layer base {
