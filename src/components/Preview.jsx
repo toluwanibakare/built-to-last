@@ -30,15 +30,19 @@ function ReviewRotation() {
   const [fading, setFading] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
-  const advance = useCallback(() => {
-    if (expanded) return // pause auto-rotate if reading
+  const goToDirection = useCallback((direction) => {
     setFading(true)
     setTimeout(() => {
-      setIndex((i) => (i + 1) % book.reviews.length)
+      setIndex((i) => (i + direction + book.reviews.length) % book.reviews.length)
       setFading(false)
       setExpanded(false)
-    }, 400)
-  }, [expanded])
+    }, 300)
+  }, [])
+
+  const advance = useCallback(() => {
+    if (expanded) return // pause auto-rotate if reading
+    goToDirection(1)
+  }, [expanded, goToDirection])
 
   useEffect(() => {
     const timer = setInterval(advance, 8000)
@@ -52,12 +56,32 @@ function ReviewRotation() {
   const displayText = expanded || !isLong ? text : text.slice(0, 200).trim() + '...'
 
   return (
-    <figure className="relative flex flex-col justify-center items-center px-6 py-10 md:px-16 md:py-14">
+    <figure className="relative flex flex-col justify-center items-center px-10 py-10 md:px-16 md:py-14">
+      <button
+        onClick={() => goToDirection(-1)}
+        className="absolute left-1 top-1/2 -translate-y-1/2 p-2 text-mist hover:text-brass transition-colors z-20 md:left-4"
+        aria-label="Previous review"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-6 h-6 md:w-8 md:h-8" strokeWidth={1.5}>
+           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <button
+        onClick={() => goToDirection(1)}
+        className="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-mist hover:text-brass transition-colors z-20 md:right-4"
+        aria-label="Next review"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-6 h-6 md:w-8 md:h-8" strokeWidth={1.5}>
+           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
       <span className="pointer-events-none absolute left-1/2 -top-4 -translate-x-1/2 select-none font-display text-[9rem] leading-none text-brass/10 md:text-[11rem]" aria-hidden="true">
         “
       </span>
       <blockquote
-        className="min-h-[14rem] md:min-h-[16rem] w-full max-w-3xl text-center relative z-10 flex flex-col items-center justify-center"
+        className="min-h-[14rem] md:min-h-[16rem] w-full max-w-3xl text-center relative z-10 flex flex-col items-center justify-center px-2"
         aria-live="polite"
       >
         <div
