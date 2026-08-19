@@ -115,17 +115,42 @@ export const book = {
       chapters: ['Chapter Seventeen: Final Words'],
     },
   ],
-  quotes: [
-    'Marriage is too important to be built on opinions. It must be built on truth.',
-    'Successful marriages do not happen by accident.',
-    'Every thriving marriage is the result of intentional effort, continual growth, and a willingness by both husband and wife to submit themselves to God’s Word.',
-    'If Christ does not govern your heart, He cannot govern your home.',
-    'The starting point is not a wedding ceremony. It is salvation.',
-    'Red flags are not minor concerns. They are early warning signs.',
-    'Red flags are not inconveniences; they are mercies.',
-    'In marriage, one plus one becomes one.',
-    'Oneness does not remove order.',
-    'Treat your wives, then, as equals so your prayers don’t run aground.',
+  reviews: [
+    {
+      author: 'Tunji Akinola',
+      title: 'Kingdom Agenda',
+      text: 'This book is not just a theological treatise with a Christian worldview, but with practical tips on diverse areas of relationships between a man and his partner. Everyone who reads this book with an open mind will find life lessons that can improve any relationship; from courtship to lifelong success in marriage. Pastor Femi has carefully put together a masterpiece that can serve as a training manual and life compass for marital guidance and success.'
+    },
+    {
+      author: 'Pastor Linus Ochai',
+      title: 'Resident Pastor, Firstlove Assembly, Rumuokwuta',
+      text: 'In a time when divorce is rising not only among unbelievers but also among believers, Built to Last calls us back to God’s original design for marriage. This powerful book highlights Biblical principles for peace and stability, with a strong emphasis on seeking God’s voice, both in who we marry and in how we do life together as husband and wife.'
+    },
+    {
+      author: 'Chukwu Chigoziem',
+      title: 'Book Editor',
+      text: 'BUILT TO LAST is such a rich resource, not only for intending or married couples, but for the entire Body of Christ. It\'s been a great privilege working on this manuscript. Page by page, you upheld the integrity of God\'s Word as the utmost arbiter... Built to Last, therefore, is a verifiable pathway to a marital life that is not only sweet but one that stands the test of time.'
+    },
+    {
+      author: 'Keji Ajayi',
+      title: 'Discipleship Thrust, England',
+      text: 'This book, Built to Last, is a grand slam and a no-holds-barred discussion of epic proportions. It is an exceptional book worthy of reading for singles aspiring to marriage and a golden compass for marriages seeking to endure the test of time. It establishes landmark points for lasting marriages by touching on pressing issues such as maintaining attraction in marriage and sexual intimacy.'
+    },
+    {
+      author: 'Dr Jimi Babatunde',
+      title: 'PharmD, MBA',
+      text: 'I am very impressed with my brother and friend, Femi Bakare, for authoring the book Built to Last. It is truly a succinct presentation of God\'s pattern for marriage. I found the book to be riveting and a genuine page-turner. It is so interesting and engaging that I simply could not put it down.'
+    },
+    {
+      author: 'Faithful Bakare',
+      title: '',
+      text: 'The book does not merely present rules and principles; it shows us how to live them out. The author, who is also my dad, does not portray himself as someone who knows it all. Instead, he openly shares stories from his own marriage, including his flaws and mistakes... I have seen their marriage, and I have seen how they have built a godly home.'
+    },
+    {
+      author: 'Pastor Mike Chimaobi Owabie',
+      title: 'Lead Pastor, Ambassadors Of Light Ministry',
+      text: 'Pastor Oluwafemi Olatunde Bakare’s book on marriage is one of the most profound I have read. As I went through it, I was so stirred in my heart that I desired to invite him to our church to teach the principles in these pages. This is not just a book you read and put down. It gives practical, biblical principles to live by for a successful marriage.'
+    }
   ],
   author: {
     name: 'Femi Bakare',
