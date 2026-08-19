@@ -8,10 +8,10 @@ export const book = {
   shortDescription:
     'A deeply biblical and practical guide written by Femi Bakare. Grounded in Scripture and the author’s over twenty-one years of marital experience, the book challenges shifting cultural misconceptions and popular opinions about relationships. It addresses critical premarital foundations, communication, marital roles, physical intimacy, and controversial topics like divorce, abuse, and remarriage. Ultimately, it provides couples with God’s unchanging pattern to build intentional, Christ-centered marriages that stand the test of time.',
   fullDescription: [
-    'Written by Pastor Femi Bakare, Built to Last is a comprehensive manual that rejects modern, shifting cultural standards and returns readers directly to the authority of Scripture. Drawing from over twenty-one years of personal marital experience, ministry, and deep biblical study, Bakare presents a powerful reminder that successful marriages are not the result of chance or luck—they are built through intentional daily effort, spiritual maturity, and alignment with God’s original blueprint.',
-    'The book is structured to guide readers across every stage of the marital journey. It begins with essential premarital guidance, emphasizing the importance of establishing a foundation in Christ and identifying wrong reasons for marriage, such as age pressure, escaping bad circumstances, or social status. It teaches singles how to spot crucial premarital "red flags"—including a lack of self-control, financial irresponsibility, and a lack of respect for authority—before making a lifetime commitment.',
+    'Written by Pastor Femi Bakare, Built to Last is a comprehensive manual that rejects modern, shifting cultural standards and returns readers directly to the authority of Scripture. Drawing from over twenty-one years of personal marital experience, ministry, and deep biblical study, Bakare presents a powerful reminder that successful marriages are not the result of chance or luck - they are built through intentional daily effort, spiritual maturity, and alignment with God’s original blueprint.',
+    'The book is structured to guide readers across every stage of the marital journey. It begins with essential premarital guidance, emphasizing the importance of establishing a foundation in Christ and identifying wrong reasons for marriage, such as age pressure, escaping bad circumstances, or social status. It teaches singles how to spot crucial premarital "red flags" - including a lack of self-control, financial irresponsibility, and a lack of respect for authority - before making a lifetime commitment.',
     'For married couples, the book provides practical principles to maintain unity and mutual collaboration. It addresses physical intimacy with rare candor for Christian circles, discussing God’s design for sexual pleasure, debunking common myths, and offering guidance on mutual respect in the bedroom. Bakare also clarifies the biblical order of the home, calling wives to submit "as unto the Lord" as an act of discipleship, and commanding husbands to love their wives sacrificially, modeled after Christ’s love for the Church.',
-    'Finally, the book deals with the heavy, sensitive issues of divorce, separation, and domestic abuse. Grounding his arguments in Matthew 19 and 1 Corinthians 7, Bakare outlines the specific biblical boundaries under which a covenant may be dissolved—namely sexual immorality, death, or unbelieving abandonment—while emphasizing that physical or mental abuse justifies separation for safety but does not authorize remarriage. Built to Last ultimately serves as a theological and practical guide to building a marriage that honors God and raises a godly generation.',
+    'Finally, the book deals with the heavy, sensitive issues of divorce, separation, and domestic abuse. Grounding his arguments in Matthew 19 and 1 Corinthians 7, Bakare outlines the specific biblical boundaries under which a covenant may be dissolved - namely sexual immorality, death, or unbelieving abandonment - while emphasizing that physical or mental abuse justifies separation for safety but does not authorize remarriage. Built to Last ultimately serves as a theological and practical guide to building a marriage that honors God and raises a godly generation.',
   ],
   problemsSolved: [
     {
@@ -24,7 +24,7 @@ export const book = {
     },
     {
       title: 'Exposes faulty premarital foundations',
-      body: 'It details the wrong reasons people get married—such as social status, age pressure, financial gain, escaping family problems, or trying to cure lust.',
+      body: 'It details the wrong reasons people get married - such as social status, age pressure, financial gain, escaping family problems, or trying to cure lust.',
     },
     {
       title: 'Shatters the silence on physical intimacy',
@@ -51,7 +51,7 @@ export const book = {
     {
       number: '02',
       title: 'Watch for courtship warnings',
-      body: 'Singles must pay attention to warning signs—such as a lack of self-control, dishonesty, financial irresponsibility, and a lack of respect for authority—because marriage does not cure character, it only reveals it.',
+      body: 'Singles must pay attention to warning signs - such as a lack of self-control, dishonesty, financial irresponsibility, and a lack of respect for authority - because marriage does not cure character, it only reveals it.',
     },
     {
       number: '03',
