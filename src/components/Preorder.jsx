@@ -30,6 +30,8 @@ export default function Preorder({ onOrderConfirmed }) {
     state: 'Abia',
     address: '',
     quantity: '1',
+    acceptTerms: false,
+    acceptShipping: false,
   })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle')
@@ -335,7 +337,35 @@ export default function Preorder({ onOrderConfirmed }) {
               </div>
 
               <div className="mt-8 flex flex-col gap-4 border-t border-line pt-7">
-                <div className="flex items-baseline justify-between">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.acceptTerms}
+                    onChange={(e) => setForm(f => ({ ...f, acceptTerms: e.target.checked }))}
+                    required
+                    className="mt-1 h-4 w-4 shrink-0 rounded border-ink/20 text-brass focus:ring-brass"
+                  />
+                  <span className="text-sm text-ink-soft">
+                    I accept the terms and policy for this pre-order.
+                  </span>
+                </label>
+                
+                {edition === 'hard' && (
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.acceptShipping}
+                      onChange={(e) => setForm(f => ({ ...f, acceptShipping: e.target.checked }))}
+                      required
+                      className="mt-1 h-4 w-4 shrink-0 rounded border-ink/20 text-brass focus:ring-brass"
+                    />
+                    <span className="text-sm text-ink-soft">
+                      I accept the shipping and refund policy. I understand that I will bear the cost of delivery to any location when the book launches.
+                    </span>
+                  </label>
+                )}
+
+                <div className="flex items-baseline justify-between mt-4">
                   <span className="text-sm text-mist">Total ({form.quantity || 1} copy)</span>
                   <span className="font-display text-2xl text-ink">
                     {formatMoney(currentPricing.preorder * Math.max(1, parseInt(form.quantity || 1, 10)))}
@@ -352,13 +382,16 @@ export default function Preorder({ onOrderConfirmed }) {
                   type="submit"
                   loading={status === 'creating' || status === 'paying'}
                   disabled={status === 'paying'}
-                  className="w-full"
+                  className="w-full mt-2"
                 >
                   Pre-order Your Copy
                 </Button>
 
                 <p className="text-center text-xs leading-relaxed text-mist">
                   Payments are processed securely by Korapay. You will receive an order confirmation after payment.
+                </p>
+                <p className="text-center text-xs leading-relaxed text-mist mt-2">
+                  If you have issues pre-ordering, contact <a href="mailto:mosesbakare48@gmail.com" className="underline hover:text-ink">mosesbakare48@gmail.com</a> or <a href="mailto:voiceoftruthonline@gmail.com" className="underline hover:text-ink">voiceoftruthonline@gmail.com</a>.
                 </p>
               </div>
             </form>
