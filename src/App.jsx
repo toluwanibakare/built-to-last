@@ -11,6 +11,7 @@ import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
 import OrderSuccess from './components/OrderSuccess'
 import ScrollToTop from './components/ui/ScrollToTop'
+import IntroCurtain from './components/IntroCurtain'
 
 function PolicyView({ type, onClose }) {
   const policies = {
@@ -97,6 +98,7 @@ export default function App() {
       >
         Skip to content
       </a>
+      <IntroCurtain />
       <Nav />
       <main>
         <Hero />
