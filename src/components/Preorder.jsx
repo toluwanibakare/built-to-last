@@ -346,7 +346,7 @@ export default function Preorder({ onOrderConfirmed }) {
                     className="mt-1 h-4 w-4 shrink-0 rounded border-ink/20 text-brass focus:ring-brass"
                   />
                   <span className="text-sm text-ink-soft">
-                    I accept the terms and policy for this pre-order.
+                    I accept the <a href="#terms" className="underline hover:text-ink text-brass">terms</a> and <a href="#privacy" className="underline hover:text-ink text-brass">privacy policy</a> for this pre-order.
                   </span>
                 </label>
                 
@@ -360,7 +360,7 @@ export default function Preorder({ onOrderConfirmed }) {
                       className="mt-1 h-4 w-4 shrink-0 rounded border-ink/20 text-brass focus:ring-brass"
                     />
                     <span className="text-sm text-ink-soft">
-                      I accept the shipping and refund policy. I understand that I will bear the cost of delivery to any location when the book launches.
+                      I accept the <a href="#shipping" className="underline hover:text-ink text-brass">shipping and refund policy</a>. I understand that I will bear the cost of delivery to any location when the book launches.
                     </span>
                   </label>
                 )}
