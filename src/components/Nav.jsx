@@ -5,6 +5,7 @@ const LINKS = [
   { href: '#book', label: 'The Book' },
   { href: '#lessons', label: 'Inside' },
   { href: '#preview', label: 'Preview' },
+  { href: '#reviews', label: 'Reviews' },
   { href: '#author', label: 'Author' },
   { href: '#faq', label: 'FAQ' },
 ]

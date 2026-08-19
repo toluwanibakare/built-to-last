@@ -25,58 +25,84 @@ function TocColumn({ part }) {
   )
 }
 
-function QuoteRotation() {
+function ReviewRotation() {
   const [index, setIndex] = useState(0)
   const [fading, setFading] = useState(false)
+  const [expanded, setExpanded] = useState(false)
 
   const advance = useCallback(() => {
+    if (expanded) return // pause auto-rotate if reading
     setFading(true)
     setTimeout(() => {
-      setIndex((i) => (i + 1) % book.quotes.length)
+      setIndex((i) => (i + 1) % book.reviews.length)
       setFading(false)
+      setExpanded(false)
     }, 400)
-  }, [])
+  }, [expanded])
 
   useEffect(() => {
-    const timer = setInterval(advance, 7000)
+    const timer = setInterval(advance, 8000)
     return () => clearInterval(timer)
   }, [advance])
 
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  const review = book.reviews[index] || {}
+  const text = review.text || ''
+  const isLong = text.length > 200
+  const displayText = expanded || !isLong ? text : text.slice(0, 200).trim() + '...'
 
   return (
     <figure className="relative flex flex-col justify-center items-center px-6 py-10 md:px-16 md:py-14">
-      <span className="pointer-events-none absolute left-1/2 -top-2 -translate-x-1/2 select-none font-display text-[9rem] leading-none text-brass/10 md:text-[11rem]" aria-hidden="true">
+      <span className="pointer-events-none absolute left-1/2 -top-4 -translate-x-1/2 select-none font-display text-[9rem] leading-none text-brass/10 md:text-[11rem]" aria-hidden="true">
         “
       </span>
       <blockquote
-        className="min-h-[10rem] md:min-h-[12rem] max-w-3xl text-center relative z-10"
+        className="min-h-[14rem] md:min-h-[16rem] w-full max-w-3xl text-center relative z-10 flex flex-col items-center justify-center"
         aria-live="polite"
       >
-        <p
-          className="font-display text-xl italic leading-relaxed text-ink md:text-2xl lg:text-[2rem] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        <div
+          className="transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] w-full"
           style={{
             opacity: fading ? 0 : 1,
             transform: fading ? 'translateY(12px)' : 'none',
             transition: reduced ? 'none' : undefined,
           }}
         >
-          {book.quotes[index]}
-        </p>
+          <p className="font-sans text-base leading-relaxed text-ink md:text-lg">
+            "{displayText}"
+          </p>
+          {isLong && (
+            <button 
+              onClick={() => setExpanded(!expanded)} 
+              className="inline-block mt-3 text-sm font-medium text-brass hover:text-brass-deep transition-colors"
+            >
+              {expanded ? 'Read less' : 'Read more'}
+            </button>
+          )}
+          <footer className="mt-6 flex flex-col items-center justify-center">
+            <cite className="font-display font-medium text-ink not-italic text-lg">{review.author}</cite>
+            {review.title && <span className="text-sm text-mist block mt-1">{review.title}</span>}
+          </footer>
+        </div>
       </blockquote>
       <figcaption className="mt-8 flex w-full items-center justify-between border-t border-line/20 pt-5 relative z-10">
         <span className="text-xs tracking-wider text-mist">
-          Reflections · {index + 1} of {book.quotes.length}
+          Reviews · {index + 1} of {book.reviews?.length || 1}
         </span>
-        <div className="flex gap-2" role="group" aria-label="Quotes">
-          {book.quotes.map((_, i) => (
+        <div className="flex gap-2" role="group" aria-label="Reviews">
+          {book.reviews?.map((_, i) => (
             <button
               key={i}
               type="button"
-              aria-label={`Show quote ${i + 1}`}
+              aria-label={`Show review ${i + 1}`}
               aria-pressed={i === index}
               onClick={() => {
-                setIndex(i)
+                setFading(true)
+                setTimeout(() => {
+                  setIndex(i)
+                  setFading(false)
+                  setExpanded(false)
+                }, 300)
               }}
               className={`h-1 rounded-full transition-all duration-500 ${
                 i === index ? 'w-6 bg-brass' : 'w-1.5 bg-line hover:bg-mist'
@@ -120,10 +146,10 @@ export default function Preview() {
           </Reveal>
         </div>
 
-        <div className="mx-auto mt-16 max-w-4xl">
+        <div id="reviews" className="mx-auto mt-24 max-w-4xl scroll-mt-24">
           <Reveal delay={200}>
             <div className="rounded-2xl border border-line bg-night text-ink shadow-soft overflow-hidden">
-              <QuoteRotation />
+              <ReviewRotation />
             </div>
           </Reveal>
         </div>
