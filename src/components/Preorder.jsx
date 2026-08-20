@@ -8,13 +8,7 @@ import { config } from '../config'
 import { initializeCheckout } from '../lib/korapay'
 import { buildOrder, createOrder, verifyPayment } from '../lib/orders'
 
-const NIGERIA_STATES = [
-  'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue',
-  'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
-  'FCT (Abuja)', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina',
-  'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo',
-  'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
-]
+// States array removed since it's now a free text input
 
 function formatMoney(amount, currency = 'NGN') {
   return new Intl.NumberFormat(currency === 'NGN' ? 'en-NG' : 'en-US', { 
@@ -37,8 +31,8 @@ export default function Preorder({ onOrderConfirmed }) {
     name: '',
     email: '',
     whatsapp: '',
-    country: 'Nigeria',
-    state: 'Abia',
+    country: '',
+    state: '',
     address: '',
     quantity: '1',
     currency: 'NGN',
@@ -66,7 +60,10 @@ export default function Preorder({ onOrderConfirmed }) {
     if (!form.name.trim()) next.name = 'Please enter your full name'
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) next.email = 'Please enter a valid email address'
     if (!form.whatsapp.trim()) next.whatsapp = 'Please enter your WhatsApp number'
+    if (!form.country.trim()) next.country = 'Please enter your country'
+    
     if (edition === 'hard') {
+      if (!form.state.trim()) next.state = 'Please enter your state or region'
       if (!form.address.trim()) next.address = 'Please enter your delivery address'
     }
     const qty = parseInt(form.quantity, 10)
@@ -91,7 +88,7 @@ export default function Preorder({ onOrderConfirmed }) {
           name: form.name.trim(),
           email: form.email.trim(),
           phone: form.whatsapp.trim(),
-          country: edition === 'hard' ? 'Nigeria' : 'N/A',
+          country: form.country.trim(),
           state: edition === 'hard' ? form.state : 'N/A',
           address: edition === 'hard' ? form.address.trim() : 'N/A',
         },
@@ -287,31 +284,27 @@ export default function Preorder({ onOrderConfirmed }) {
                   required
                 />
 
+                <Field
+                  id="order-country"
+                  label="Country"
+                  placeholder="e.g. Nigeria, USA, UK"
+                  value={form.country}
+                  onChange={setField('country')}
+                  error={errors.country}
+                  required
+                />
+
                 {edition === 'hard' && (
                   <>
                     <Field
-                      id="order-country"
-                      as="select"
-                      label="Country"
-                      value={form.country}
-                      onChange={setField('country')}
-                      required
-                    >
-                      <option value="Nigeria">Nigeria</option>
-                    </Field>
-                    <Field
                       id="order-state"
-                      as="select"
-                      label="State"
+                      label="State / Region"
+                      placeholder="e.g. Lagos, Texas, London"
                       value={form.state}
                       onChange={setField('state')}
                       error={errors.state}
                       required
-                    >
-                      {NIGERIA_STATES.map((s) => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </Field>
+                    />
                     <Field
                       id="order-address"
                       label="Delivery address"
