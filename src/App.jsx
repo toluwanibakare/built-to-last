@@ -12,6 +12,7 @@ import Footer from './components/Footer'
 import OrderSuccess from './components/OrderSuccess'
 import ScrollToTop from './components/ui/ScrollToTop'
 import IntroCurtain from './components/IntroCurtain'
+import { Analytics } from '@vercel/analytics/react'
 
 function PolicyView({ type, onClose }) {
   const policies = {
@@ -113,6 +114,7 @@ export default function App() {
       <Footer onSelectPolicy={setActivePolicy} />
       <ScrollToTop />
       {activePolicy && <PolicyView type={activePolicy} onClose={() => setActivePolicy(null)} />}
+      <Analytics />
     </>
   )
 }
