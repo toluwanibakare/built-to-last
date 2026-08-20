@@ -161,15 +161,17 @@ export default function Preorder({ onOrderConfirmed }) {
         metadata: { orderId: order.reference, qty: String(quantity), edition: order.edition },
         onSuccess: async (data) => {
           try {
-            await verifyPayment({ reference: data.reference || order.reference, orderId: order.reference })
+            const korapayRef = data.transaction_reference || data.reference || order.reference;
+            await verifyPayment({ reference: korapayRef, orderId: order.reference })
           } catch {
             setStatus('idle')
             setMessage('Payment was received, but we could not confirm it automatically. Please contact us with your order number.')
             return
           }
+          const finalRef = data.transaction_reference || data.reference || order.reference;
           onOrderConfirmed({
             ...order,
-            paymentReference: data.reference || order.reference,
+            paymentReference: finalRef,
             paymentStatus: 'paid',
             status: 'successful',
           })
