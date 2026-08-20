@@ -482,7 +482,7 @@ export default function Preorder({ onOrderConfirmed }) {
                     : 'Payments are processed securely by Korapay. You will receive an order confirmation after payment.'}
                 </p>
                 <p className="text-center text-xs leading-relaxed text-mist mt-2">
-                  If you have issues pre-ordering, contact <a href="mailto:mosesbakare48@gmail.com" className="underline hover:text-ink">mosesbakare48@gmail.com</a> or <a href="mailto:voiceoftruthonline@gmail.com" className="underline hover:text-ink">voiceoftruthonline@gmail.com</a>.
+                  If you have issues pre-ordering, contact <a href="mailto:builttolastfm@gmail.com" className="underline hover:text-ink">builttolastfm@gmail.com</a> or <a href="mailto:mosesbakare48@gmail.com" className="underline hover:text-ink">mosesbakare48@gmail.com</a>.
                 </p>
               </div>
             </form>

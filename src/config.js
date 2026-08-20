@@ -4,7 +4,7 @@ export const config = {
   site: {
     name: 'Built to Last',
     canonicalUrl: env.VITE_CANONICAL_URL || 'https://voiceoftruthonline.com',
-    contactEmail: env.VITE_CONTACT_EMAIL || 'voiceoftruthonline@gmail.com',
+    contactEmail: env.VITE_CONTACT_EMAIL || 'builttolastfm@gmail.com',
   },
   order: {
     bookTitle: 'Built to Last: Discovering God’s Pattern for Marriage That Endures',
