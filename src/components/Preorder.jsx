@@ -8,7 +8,13 @@ import { config } from '../config'
 import { initializeCheckout } from '../lib/korapay'
 import { buildOrder, createOrder, verifyPayment } from '../lib/orders'
 
-// States array removed since it's now a free text input
+const NIGERIA_STATES = [
+  'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue',
+  'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
+  'FCT (Abuja)', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina',
+  'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo',
+  'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
+]
 
 function formatMoney(amount, currency = 'NGN') {
   return new Intl.NumberFormat(currency === 'NGN' ? 'en-NG' : 'en-US', { 
@@ -31,8 +37,8 @@ export default function Preorder({ onOrderConfirmed }) {
     name: '',
     email: '',
     whatsapp: '',
-    country: '',
-    state: '',
+    country: 'Nigeria',
+    state: 'Abia',
     address: '',
     quantity: '1',
     currency: 'NGN',
@@ -224,6 +230,7 @@ export default function Preorder({ onOrderConfirmed }) {
                       type="button"
                       onClick={() => {
                         setEdition('hard')
+                        setForm((f) => ({ ...f, country: 'Nigeria', state: 'Abia' }))
                         setErrors({})
                       }}
                       className={`rounded-lg border p-4 text-center transition-all duration-300 cursor-pointer ${
@@ -238,6 +245,7 @@ export default function Preorder({ onOrderConfirmed }) {
                       type="button"
                       onClick={() => {
                         setEdition('soft')
+                        setForm((f) => ({ ...f, country: '', state: '' }))
                         setErrors({})
                       }}
                       className={`rounded-lg border p-4 text-center transition-all duration-300 cursor-pointer ${
@@ -284,27 +292,31 @@ export default function Preorder({ onOrderConfirmed }) {
                   required
                 />
 
-                <Field
-                  id="order-country"
-                  label="Country"
-                  placeholder="e.g. Nigeria, USA, UK"
-                  value={form.country}
-                  onChange={setField('country')}
-                  error={errors.country}
-                  required
-                />
-
-                {edition === 'hard' && (
+                {edition === 'hard' ? (
                   <>
                     <Field
+                      id="order-country"
+                      as="select"
+                      label="Country"
+                      value={form.country}
+                      onChange={setField('country')}
+                      required
+                    >
+                      <option value="Nigeria">Nigeria</option>
+                    </Field>
+                    <Field
                       id="order-state"
-                      label="State / Region"
-                      placeholder="e.g. Lagos, Texas, London"
+                      as="select"
+                      label="State"
                       value={form.state}
                       onChange={setField('state')}
                       error={errors.state}
                       required
-                    />
+                    >
+                      {NIGERIA_STATES.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </Field>
                     <Field
                       id="order-address"
                       label="Delivery address"
@@ -316,6 +328,17 @@ export default function Preorder({ onOrderConfirmed }) {
                       className="md:col-span-2"
                     />
                   </>
+                ) : (
+                  <Field
+                    id="order-country"
+                    label="Country"
+                    placeholder="e.g. USA, UK, Canada"
+                    value={form.country}
+                    onChange={setField('country')}
+                    error={errors.country}
+                    required
+                    className="md:col-span-2"
+                  />
                 )}
 
                 <div className="md:col-span-2 md:max-w-[12rem] flex flex-col gap-2">
