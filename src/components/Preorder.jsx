@@ -246,21 +246,6 @@ export default function Preorder({ onOrderConfirmed }) {
               className="rounded-2xl border border-line bg-cream p-8 shadow-soft md:p-10"
             >
               <div className="grid gap-5 md:grid-cols-2">
-                <Field
-                  id="order-currency"
-                  as="select"
-                  label="Select Currency"
-                  value={form.currency}
-                  onChange={setField('currency')}
-                  className="md:col-span-2"
-                  required
-                >
-                  <option value="NGN">Naira (NGN)</option>
-                  <option value="USD">Dollars (USD)</option>
-                  <option value="EUR">Euros (EUR)</option>
-                  <option value="GBP">Pounds (GBP)</option>
-                </Field>
-
                 <div className="md:col-span-2 flex flex-col gap-2">
                   <label className="text-sm font-medium text-ink-soft">Select Book Edition</label>
                   <div className="grid grid-cols-2 gap-4">
@@ -421,6 +406,23 @@ export default function Preorder({ onOrderConfirmed }) {
                     <p className="text-sm text-mist">How many copies would you like?</p>
                   )}
                 </div>
+
+                {edition === 'soft' && (
+                  <Field
+                    id="order-currency"
+                    as="select"
+                    label="Select Currency"
+                    value={form.currency}
+                    onChange={setField('currency')}
+                    className="md:col-span-2"
+                    required
+                  >
+                    <option value="NGN">Naira (NGN)</option>
+                    <option value="USD">Dollars (USD)</option>
+                    <option value="EUR">Euros (EUR)</option>
+                    <option value="GBP">Pounds (GBP)</option>
+                  </Field>
+                )}
               </div>
 
               <div className="mt-8 flex flex-col gap-4 border-t border-line pt-7">
