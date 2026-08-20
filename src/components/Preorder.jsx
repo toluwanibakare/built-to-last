@@ -57,8 +57,16 @@ export default function Preorder({ onOrderConfirmed }) {
   const rate = EXCHANGE_RATES[form.currency] || 1
 
   const setField = (name) => (e) => {
-    setForm((f) => ({ ...f, [name]: e.target.value }))
+    const val = e.target.value
+    setForm((f) => ({ ...f, [name]: val }))
     setErrors((er) => ({ ...er, [name]: undefined }))
+
+    if (name === 'currency' && val !== 'NGN') {
+      setEdition('soft')
+      setForm((f) => ({ ...f, country: '', state: '' }))
+    } else if (name === 'currency' && val === 'NGN') {
+      // Optional: don't auto-switch back to hard, let them choose
+    }
   }
 
   const validate = () => {
@@ -82,7 +90,21 @@ export default function Preorder({ onOrderConfirmed }) {
     e.preventDefault()
     setMessage('')
 
-    if (!validate()) return
+    if (!validate()) {
+      if (!form.acceptTerms || (edition === 'hard' && !form.acceptShipping)) {
+        setMessage('Please accept the terms and shipping policies to continue.')
+      }
+      return
+    }
+
+    if (!form.acceptTerms) {
+      setMessage('Please accept the terms and privacy policy.')
+      return
+    }
+    if (edition === 'hard' && !form.acceptShipping) {
+      setMessage('Please accept the shipping and refund policy.')
+      return
+    }
 
     setStatus('creating')
     try {
@@ -105,6 +127,9 @@ export default function Preorder({ onOrderConfirmed }) {
       order.currency = form.currency
       order.edition = edition === 'hard' ? 'Hard Copy (Paperback)' : 'Soft Copy (E-book)'
 
+      const isRequest = form.currency !== 'NGN'
+      order.isRequest = isRequest
+
       await createOrder({
         reference: order.reference,
         customer: order.customer,
@@ -112,7 +137,19 @@ export default function Preorder({ onOrderConfirmed }) {
         amount: order.total,
         currency: order.currency,
         edition: order.edition,
+        status: isRequest ? 'requested' : 'pending'
       })
+
+      if (isRequest) {
+        setStatus('idle')
+        onOrderConfirmed({
+          ...order,
+          paymentReference: 'N/A',
+          paymentStatus: 'pending',
+          status: 'requested',
+        })
+        return
+      }
 
       setStatus('paying')
       initializeCheckout({
@@ -148,9 +185,10 @@ export default function Preorder({ onOrderConfirmed }) {
           setMessage('Your bank transfer is being confirmed. We will confirm your order once it clears.')
         },
       })
-    } catch {
+    } catch (err) {
       setStatus('idle')
-      setMessage('Something went wrong while starting your payment. Please try again.')
+      console.error(err)
+      setMessage(err.message || 'Something went wrong while starting your payment. Please try again.')
     }
   }
 
@@ -228,18 +266,21 @@ export default function Preorder({ onOrderConfirmed }) {
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       type="button"
+                      disabled={form.currency !== 'NGN'}
                       onClick={() => {
                         setEdition('hard')
                         setForm((f) => ({ ...f, country: 'Nigeria', state: 'Abia' }))
                         setErrors({})
                       }}
-                      className={`rounded-lg border p-4 text-center transition-all duration-300 cursor-pointer ${
+                      className={`rounded-lg border p-4 text-center transition-all duration-300 ${
+                        form.currency !== 'NGN' ? 'opacity-50 cursor-not-allowed border-line bg-cream/40 text-slate' :
                         edition === 'hard'
-                          ? 'border-brass bg-brass/10 text-ink font-semibold'
-                          : 'border-line bg-cream/40 text-slate hover:border-ink/20'
+                          ? 'border-brass bg-brass/10 text-ink font-semibold cursor-pointer'
+                          : 'border-line bg-cream/40 text-slate hover:border-ink/20 cursor-pointer'
                       }`}
                     >
                       Hard Copy (Paperback)
+                      {form.currency !== 'NGN' && <span className="block text-xs mt-1 font-normal opacity-70">Naira only</span>}
                     </button>
                     <button
                       type="button"
@@ -430,11 +471,13 @@ export default function Preorder({ onOrderConfirmed }) {
                   disabled={status === 'paying'}
                   className="w-full mt-2"
                 >
-                  Pre-order Your Copy
+                  {form.currency !== 'NGN' ? 'Submit Request' : 'Pre-order Your Copy'}
                 </Button>
 
                 <p className="text-center text-xs leading-relaxed text-mist">
-                  Payments are processed securely by Korapay. You will receive an order confirmation after payment.
+                  {form.currency !== 'NGN' 
+                    ? 'Your request will be sent to our team, and we will email you with payment details.'
+                    : 'Payments are processed securely by Korapay. You will receive an order confirmation after payment.'}
                 </p>
                 <p className="text-center text-xs leading-relaxed text-mist mt-2">
                   If you have issues pre-ordering, contact <a href="mailto:mosesbakare48@gmail.com" className="underline hover:text-ink">mosesbakare48@gmail.com</a> or <a href="mailto:voiceoftruthonline@gmail.com" className="underline hover:text-ink">voiceoftruthonline@gmail.com</a>.

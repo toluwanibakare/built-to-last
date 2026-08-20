@@ -29,10 +29,10 @@ export default function OrderSuccess({ order, onContinue }) {
           </div>
 
           <h1 className="mt-8 font-display text-3xl leading-tight text-ink md:text-4xl">
-            Thank you, {order.customer.name.split(' ')[0]}
+            {order.isRequest ? 'Request Received,' : 'Thank you,'} {order.customer.name.split(' ')[0]}
           </h1>
           <p className="mt-4 leading-relaxed text-slate">
-            Thank you so much for trusting us. Your pre-order for <strong className="font-medium text-ink">Built to Last</strong>{' '}
+            Thank you so much for trusting us. Your {order.isRequest ? 'request' : 'pre-order'} for <strong className="font-medium text-ink">Built to Last</strong>{' '}
             has been received. A confirmation has been sent to{' '}
             <strong className="font-medium text-ink">{order.customer.email}</strong>.
           </p>
@@ -43,12 +43,12 @@ export default function OrderSuccess({ order, onContinue }) {
             <Row label="Edition" value={order.edition} />
             <Row label="Quantity" value={`${order.quantity} copy${order.quantity > 1 ? 's' : ''}`} />
             <Row
-              label="Total paid"
-              value={`${order.currency} ${order.total.toLocaleString('en-NG')}`}
+              label={order.isRequest ? "Total amount" : "Total paid"}
+              value={`${order.currency === 'NGN' ? '₦' : order.currency === 'USD' ? '$' : order.currency === 'EUR' ? '€' : '£'}${order.total.toLocaleString('en-NG')}`}
             />
-            <Row label="Payment reference" value={order.paymentReference} />
+            {!order.isRequest && <Row label="Payment reference" value={order.paymentReference} />}
             <Row label="Delivery to" value={deliveryNote} />
-            <Row label="Order status" value="Successful" />
+            <Row label="Order status" value={order.isRequest ? "Request Pending" : "Successful"} />
           </dl>
 
           <div className="mt-8 rounded-2xl border border-line p-6">
@@ -56,7 +56,9 @@ export default function OrderSuccess({ order, onContinue }) {
               What happens next
             </p>
             <p className="mt-3 text-sm leading-relaxed text-slate">
-              You will be the first to know when the book is available, and more details will be sent to your email periodically with updates on the book.
+              {order.isRequest 
+                ? "Our team has been notified and will reach out to you shortly via email with the payment instructions for your requested currency."
+                : "You will be the first to know when the book is available, and more details will be sent to your email periodically with updates on the book."}
             </p>
           </div>
 

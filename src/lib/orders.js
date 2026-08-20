@@ -23,7 +23,7 @@ export async function createOrder(payload) {
     total: payload.amount,
     currency: payload.currency,
     payment_status: 'pending',
-    status: 'pending'
+    status: payload.status || 'pending'
   }])
 
   if (error) {
