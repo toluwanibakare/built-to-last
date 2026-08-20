@@ -16,8 +16,19 @@ const NIGERIA_STATES = [
   'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
 ]
 
-function formatMoney(amount) {
-  return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount)
+function formatMoney(amount, currency = 'NGN') {
+  return new Intl.NumberFormat(currency === 'NGN' ? 'en-NG' : 'en-US', { 
+    style: 'currency', 
+    currency: currency, 
+    maximumFractionDigits: currency === 'NGN' ? 0 : 2 
+  }).format(amount)
+}
+
+const EXCHANGE_RATES = {
+  NGN: 1,
+  USD: 1 / 1500,
+  EUR: 1 / 1600,
+  GBP: 1 / 1900,
 }
 
 export default function Preorder({ onOrderConfirmed }) {
@@ -30,6 +41,7 @@ export default function Preorder({ onOrderConfirmed }) {
     state: 'Abia',
     address: '',
     quantity: '1',
+    currency: 'NGN',
     acceptTerms: false,
     acceptShipping: false,
   })
@@ -42,6 +54,7 @@ export default function Preorder({ onOrderConfirmed }) {
     soft: { regular: 6000, preorder: 5500 },
   }
   const currentPricing = PRICING[edition]
+  const rate = EXCHANGE_RATES[form.currency] || 1
 
   const setField = (name) => (e) => {
     setForm((f) => ({ ...f, [name]: e.target.value }))
@@ -71,7 +84,8 @@ export default function Preorder({ onOrderConfirmed }) {
     setStatus('creating')
     try {
       const quantity = parseInt(form.quantity, 10)
-      const totalAmount = currentPricing.preorder * quantity
+      const baseTotal = currentPricing.preorder * quantity
+      const totalAmount = form.currency === 'NGN' ? baseTotal : Number((baseTotal * rate).toFixed(2))
       const order = buildOrder({
         customer: {
           name: form.name.trim(),
@@ -85,6 +99,7 @@ export default function Preorder({ onOrderConfirmed }) {
       })
       
       order.total = totalAmount
+      order.currency = form.currency
       order.edition = edition === 'hard' ? 'Hard Copy (Paperback)' : 'Soft Copy (E-book)'
 
       await createOrder({
@@ -156,8 +171,8 @@ export default function Preorder({ onOrderConfirmed }) {
                 <div className="flex items-baseline justify-between gap-6">
                   <dt className="text-mist">Price per copy</dt>
                   <dd className="flex items-baseline gap-2">
-                    <span className="line-through text-mist text-sm">{formatMoney(currentPricing.regular)}</span>
-                    <span className="font-display text-lg font-semibold text-brass">{formatMoney(currentPricing.preorder)}</span>
+                    <span className="line-through text-mist text-sm">{formatMoney(currentPricing.regular * rate, form.currency)}</span>
+                    <span className="font-display text-lg font-semibold text-brass">{formatMoney(currentPricing.preorder * rate, form.currency)}</span>
                     <span className="text-xs text-brass/80 font-medium">Pre-order</span>
                   </dd>
                 </div>
@@ -190,6 +205,21 @@ export default function Preorder({ onOrderConfirmed }) {
               className="rounded-2xl border border-line bg-cream p-8 shadow-soft md:p-10"
             >
               <div className="grid gap-5 md:grid-cols-2">
+                <Field
+                  id="order-currency"
+                  as="select"
+                  label="Select Currency"
+                  value={form.currency}
+                  onChange={setField('currency')}
+                  className="md:col-span-2"
+                  required
+                >
+                  <option value="NGN">Naira (NGN)</option>
+                  <option value="USD">Dollars (USD)</option>
+                  <option value="EUR">Euros (EUR)</option>
+                  <option value="GBP">Pounds (GBP)</option>
+                </Field>
+
                 <div className="md:col-span-2 flex flex-col gap-2">
                   <label className="text-sm font-medium text-ink-soft">Select Book Edition</label>
                   <div className="grid grid-cols-2 gap-4">
@@ -368,7 +398,7 @@ export default function Preorder({ onOrderConfirmed }) {
                 <div className="flex items-baseline justify-between mt-4">
                   <span className="text-sm text-mist">Total ({form.quantity || 1} copy)</span>
                   <span className="font-display text-2xl text-ink">
-                    {formatMoney(currentPricing.preorder * Math.max(1, parseInt(form.quantity || 1, 10)))}
+                    {formatMoney(currentPricing.preorder * Math.max(1, parseInt(form.quantity || 1, 10)) * rate, form.currency)}
                   </span>
                 </div>
 

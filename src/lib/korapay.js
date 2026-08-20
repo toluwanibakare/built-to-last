@@ -40,7 +40,7 @@ export async function initializeCheckout({ reference, amount, currency, customer
   const options = {
     key: config.korapay.publicKey,
     reference,
-    amount: Math.round(amount),
+    amount,
     currency,
     customer: {
       name: customer.name,
